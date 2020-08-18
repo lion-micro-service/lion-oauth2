@@ -52,8 +52,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Resource
     private AuthorizationIgnoreProperties authorizationIgnoreProperties;
 
-    @Value("${security.oauth2.resource.scope}")
-    private String scope;
+//    @Value("${security.oauth2.resource.scope}")
+//    private String scope;
 
 
 
@@ -77,10 +77,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 .antMatchers(authorizationIgnoreProperties.getIgnoreUrl().toArray(new String[]{}))
                 .permitAll()
-            .and()
-                .authorizeRequests()
-                .antMatchers("/**")
-                .access( "#oauth2.hasScope('"+scope+"')")
+//            .and()
+//                .authorizeRequests()
+//                .antMatchers("/**")
+//                .access( "#oauth2.hasScope('"+scope+"')")
             .and()
                 .authorizeRequests()
                 .anyRequest()
