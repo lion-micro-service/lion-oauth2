@@ -21,7 +21,7 @@ public class LionTokenEnhancer implements TokenEnhancer {
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         LionUserDetails user = (LionUserDetails) authentication.getPrincipal();
         final Map<String, Object> additionalInfo = new HashMap<>();
-        additionalInfo.put("userId",user.getUserId());
+//        additionalInfo.put("userId",user.getUserId());
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }
