@@ -1,7 +1,7 @@
 package com.lion.authorization.handler;
 
 import com.lion.core.ResultData;
-import com.lion.core.ResultDataState;
+import com.lion.core.common.enums.ResultDataState;
 import com.lion.utils.JsonUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
