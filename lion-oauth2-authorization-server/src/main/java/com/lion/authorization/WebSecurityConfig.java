@@ -2,7 +2,6 @@ package com.lion.authorization;
 
 import com.lion.config.PasswordConfiguration;
 import com.lion.constant.DubboConstant;
-import com.lion.upm.expose.user.UserSecurityExposeService;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -29,7 +29,7 @@ import javax.annotation.Resource;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @DubboReference(cluster= DubboConstant.CLUSTER_FAILOVER,retries = 3)
-    private UserSecurityExposeService userSecurityExposdService;
+    private UserDetailsService userDetailsService;
 
     @Resource
     private PasswordEncoder passwordEncoder;
@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure ( AuthenticationManagerBuilder auth ) throws Exception {
-        auth.userDetailsService(userSecurityExposdService)
+        auth.userDetailsService(userDetailsService)
             .passwordEncoder(passwordEncoder);
     }
 

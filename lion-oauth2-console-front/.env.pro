@@ -1,0 +1,4 @@
+NODE_ENV=production
+VUE_APP_CURRENTMODE=serve
+VUE_APP_BASEURL=http://172.16.30.100/api
+VUE_APP_BASEAPI=http://172.16.30.100/api

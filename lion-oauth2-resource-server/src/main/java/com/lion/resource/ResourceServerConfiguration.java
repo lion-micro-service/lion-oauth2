@@ -15,9 +15,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.web.client.RestTemplate;
@@ -95,8 +97,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
      */
     protected ResourceServerTokenServices getResourceServerTokenServices(){
         RemoteTokenServices resourceServerTokenServices = new RemoteTokenServices();
-        resourceServerTokenServices.setClientId(resourceServerProperties.getClientId());
-        resourceServerTokenServices.setClientSecret(resourceServerProperties.getClientSecret());
+//        resourceServerTokenServices.setAccessTokenConverter(new DefaultAccessTokenConverter());
+        resourceServerTokenServices.setClientId("app");
+        resourceServerTokenServices.setClientSecret("app");
         resourceServerTokenServices.setCheckTokenEndpointUrl(resourceServerProperties.getTokenInfoUri());
         resourceServerTokenServices.setRestTemplate(restTemplate);
         return resourceServerTokenServices;

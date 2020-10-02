@@ -13,7 +13,6 @@
     <version>${project.parent.version}</version>
 
     <properties>
-        <lion-upms-expose.version>1.0.0-SNAPSHOT</lion-upms-expose.version>
     </properties>
 
     <dependencies>
@@ -69,8 +68,8 @@
         </dependency>
         <dependency>
             <groupId>com.lion</groupId>
-            <artifactId>lion-upms-expose</artifactId>
-            <version>${lion-upms-expose.version}</version>
+            <artifactId>lion-core</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

@@ -1,0 +1,26 @@
+{
+  "name": "@lion/lion-common-console-front",
+  "version": "1.0.0",
+  "description": "common后台管理前端",
+  "private": false,
+  "scripts": {
+    "serve": "vue-cli-service serve --mode dev",
+    "build": "vue-cli-service build --mode test",
+    "lion-serve": "vue-cli-service lion-serve --mode test"
+  },
+  "dependencies": {
+    "@lion/lion-front-core": "^1.0.0"
+  },
+  "devDependencies": {
+    "@lion/lion-front-devDependencies": "^1.0.0",
+    "@vue/cli-plugin-typescript": "^4.5.4"
+  },
+  "publishConfig": {
+    "registry": "http://127.0.0.1:8081/repository/hosted-repository-npm/"
+  },
+  "vuePlugins": {
+    "service": [
+      "./node_modules/@lion/lion-front-core/src/plugins/vue-cli-plugin-lion-serve.js"
+    ]
+  }
+}
