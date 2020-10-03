@@ -15,10 +15,28 @@
             </a-row>
             <a-row>
                 <a-col :span="24">
-                    <a-form-model-item label="权限" prop="scope" ref="scope">
-                        <a-select v-model="addOrUpdateModel.scope" mode="tags" style="width: 100%" :token-separators="[',']" @change="scopeChange">
-                            <a-select-option v-for="i in 25" :key="(i + 9).toString(36) + i">
-                                {{ (i + 9).toString(36) + i }}
+                    <a-form-model-item label="token有效期" prop="accessTokenValidity" ref="accessTokenValidity">
+                        <a-input-number placeholder="请输入token有效期" v-model="addOrUpdateModel.accessTokenValidity"/>
+                    </a-form-model-item>
+                </a-col>
+            </a-row>
+            <a-row>
+                <a-col :span="24">
+                    <a-form-model-item label="授权方式" prop="grantTypes" ref="grantTypes">
+                        <a-select :default-value="grantTypesDefault"  mode="multiple" style="width: 100%" placeholder="请选择授权方式" >
+                            <a-select-option :key="grantTypes.name" v-for="(grantTypes) in authorizedGrantTypes">
+                                {{ grantTypes.name.toLowerCase() }}
+                            </a-select-option>
+                        </a-select>
+                    </a-form-model-item>
+                </a-col>
+            </a-row>
+            <a-row>
+                <a-col :span="24">
+                    <a-form-model-item label="权限" prop="scopes" ref="scopes">
+                        <a-select :default-value="scopesDefault" mode="tags" placeholder="请选择权限" style="width: 100%" :token-separators="[',']">
+                            <a-select-option :key="scope.name" v-for="(scope) in scopes">
+                                {{ scope.name.toLowerCase() }}
                             </a-select-option>
                         </a-select>
                     </a-form-model-item>
@@ -27,7 +45,7 @@
             <a-row>
                 <a-col :span="24">
                     <a-form-model-item label="资源" prop="resourceIds" ref="resourceIds">
-                        <a-input placeholder="请输入资源" v-model="addOrUpdateModel.resourceIds" />
+                        <a-textarea  placeholder="请输入资源" :rows="6" v-model="addOrUpdateModel.resourceIds"/>
                     </a-form-model-item>
                 </a-col>
             </a-row>
@@ -41,38 +59,49 @@
     import { message } from 'ant-design-vue';
     @Component({})
     export default class addOrUpdate extends Vue{
+        private password:Array<string> =["password"];
         //点击阴影层是否关闭窗口
         private maskClosable:boolean=false;
         //是否显示窗口
         private addOrUpdateModal:boolean=false;
         //添加修改数据模型
-        private addOrUpdateModel:any={}
+        private addOrUpdateModel:any={};
+        //授权方式数据源
+        private authorizedGrantTypes:any={};
+        //授权方式默认选中数据
+        private grantTypesDefault:any={};
+        //权限数据源
+        private scopes:any={};
+        //权限默认选中数据
+        private scopesDefault:any={};
         //校验规则
         private rules:any={
-            clientId:[{required:true,validator:this.checkCodeIsExist,trigger:'blur'}],
-            clientSecretPlaintext:[{required:true,trigger:'blur'}],
-            scope:[{required:true,trigger:'blur'}],
+            clientId:[{required:true,validator:this.checkClientIdIsExist,trigger:'blur'}],
+            clientSecretPlaintext:[{required:true,message:"请输入客户端密钥",trigger:'blur'}],
+            scopes:[{required:true,message:"请输选择权限",trigger:'blur'}],
+            grantTypes:[{required:true,message:"请选择授权方式",trigger:'blur'}],
+            accessTokenValidity:[{required:true,message:"请输入token有效期",trigger:'blur'}],
         };
 
         /**
-         * 检查编码是否存在
+         * 检查客户端id是否存在
          * @param rule
          * @param value
          * @param callback
          */
-        private checkCodeIsExist(rule :any, value:string, callback:any):void{
+        private checkClientIdIsExist(rule :any, value:string, callback:any):void{
             if (!value || value.trim() === ''){
                 callback(new Error('请输入编码'));
                 return;
             }else if (value && value.trim() !== ''){
-                axios.get("/common/parameter/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code,"id":this.addOrUpdateModel.id}})
+                axios.get("/oauth/client/console/check/clientId/exist",{params:{"clientId":this.addOrUpdateModel.clientId,"id":this.addOrUpdateModel.id}})
                     .then((data)=> {
                         if (Object(data).status !== 200){
                             callback(new Error('异常错误！请检查'));
                             return;
                         }
                         if (data.data.isExist) {
-                            callback(new Error('编码已存在'));
+                            callback(new Error('客户端id已存在'));
                         }else {
                             callback();
                         }
@@ -92,8 +121,10 @@
         private addOrUpdate():void{
             (this.$refs.addOrUpdateForm as any).validate((validate: boolean) => {
                 if (validate) {
+                    this.addOrUpdateModel.authorizedGrantTypes=this.addOrUpdateModel.grantTypes.join(",").toLowerCase();
+                    this.addOrUpdateModel.scope=this.addOrUpdateModel.scopes.join(",").toLowerCase();
                     if (this.addOrUpdateModel.id){
-                        axios.put("/common/parameter/console/update",this.addOrUpdateModel)
+                        axios.put("/oauth/client/console/update",this.addOrUpdateModel)
                             .then((data) =>{
                                 if (Object(data).status === 200){
                                     message.success(Object(data).message);
@@ -103,7 +134,7 @@
                         }).finally(()=>{
                         })
                     }else {
-                        axios.post("/common/parameter/console/add",this.addOrUpdateModel)
+                        axios.post("/oauth/client/console/add",this.addOrUpdateModel)
                             .then((data) =>{
                                 if (Object(data).status === 200){
                                     message.success(Object(data).message);
@@ -117,23 +148,64 @@
             });
         }
 
+
+
         /**
          * 获取详情
          * @param id
          */
-        private getDetails(id:string):void{
-            axios.get("/common/parameter/console/details",{params:{"id":id}})
-                .then((data)=>{
-                    if (Object(data).status === 200 && data.data.parameter){
-                        let parameter = data.data.parameter;
-                        this.addOrUpdateModel=parameter;
-                        this.addOrUpdateModal=true;
-                    }
-                })
-                .catch(fail => {
-                })
-                .finally(()=>{
-                });
+        private async getDetails(id:string){
+            await axios.get("/oauth/client/console/details",{params:{"id":id}})
+            .then((data)=>{
+                if (Object(data).status === 200 && data.data.oauthClientDetails){
+                    this.addOrUpdateModel.clientId=data.data.oauthClientDetails.clientId;
+                    this.addOrUpdateModel.clientSecretPlaintext=data.data.oauthClientDetails.clientSecretPlaintext;
+                    this.addOrUpdateModel.accessTokenValidity=data.data.oauthClientDetails.accessTokenValidity;
+                    this.scopesDefault=data.data.oauthClientDetails.scope.split(',');
+                    this.grantTypesDefault=data.data.oauthClientDetails.authorizedGrantTypes.split(',');
+                    debugger;
+                }
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
+            });
+        }
+
+        /**
+         * 获取权限下拉框数据源
+         */
+        private async getSelectDate(){
+            await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.resource.enums.Scope"}})
+            .then((data) => {
+                this.scopes = data.data.enum;
+            })
+            .catch(fail => {
+            })
+            .finally(() => {
+            });
+            await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.resource.enums.GrantTypes"}})
+            .then((data) => {
+                this.authorizedGrantTypes = data.data.enum;
+            })
+            .catch(fail => {
+            })
+            .finally(() => {
+            });
+        }
+
+
+        private async openWindow(id:string) {
+            this.addOrUpdateModel={};
+            const _this=this;
+            await this.getSelectDate();
+            if (id) {
+                await this.getDetails(id);
+            }
+            setTimeout(function () {
+                _this.addOrUpdateModal=true;
+            },500);
+
         }
 
         /**
@@ -145,23 +217,19 @@
             (this.$parent as any).search();
         }
 
+
+
     }
 </script>
 
 <style scoped>
-    #remark >>> .ant-form-item-control-wrapper{
-        width: calc(100% - 80px);
-    }
-    #remark >>> .ant-form-item{
-        width: 100%;
-    }
     .ant-form-item >>> .ant-form-item-label{
-        width: 80px;
+        width: 100px;
     }
     .ant-form-item{
         width: 100%;
     }
     .ant-row >>> .ant-form-item-control-wrapper{
-        width: calc(100% - 80px);
+        width: calc(100% - 100px);
     }
 </style>

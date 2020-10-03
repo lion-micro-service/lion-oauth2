@@ -56,11 +56,11 @@
         private loading:boolean=false;
         //列表表头定义
         private columns :Array<any> = [
-            { title: '客户端id', dataIndex: 'clientId', key: 'clientId'},
-            { title: '客户端密钥', dataIndex: 'clientSecretPlaintext', key: 'clientSecretPlaintext' },
+            { title: '客户端id', dataIndex: 'clientId', key: 'clientId',width: 100},
+            { title: '客户端密钥', dataIndex: 'clientSecretPlaintext', key: 'clientSecretPlaintext' ,width: 120},
             { title: '客户端资源', dataIndex: 'resourceIds', key: 'resourceIds'},
-            { title: '权限', dataIndex: 'scope', key: 'scope'},
-            { title: 'token有效期', dataIndex: 'accessTokenValidity', key: 'accessTokenValidity'},
+            { title: '权限', dataIndex: 'scope', key: 'scope',width: 300},
+            { title: 'token有效期（秒）', dataIndex: 'accessTokenValidity', key: 'accessTokenValidity',width: 180},
             { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 200,}
         ];
         //列表分页参数定义
@@ -98,7 +98,7 @@
          */
         private search():void{
             this.loading=true;
-            axios.get("/common/parameter/console/list",{params:this.searchModel})
+            axios.get("/oauth/client/console/list",{params:this.searchModel})
                 .then((data)=>{
                     this.data=data.data.list;
                     this.paginationProps.total=Number((Object(data)).totalElements);
@@ -125,7 +125,7 @@
         private add():void{
             let child = this.$refs.addOrUpdate as any;
             child.addOrUpdateModel={};
-            child.addOrUpdateModal=true;
+            child.openWindow(null);
         }
 
         /**
@@ -134,7 +134,7 @@
          */
         private edit(id:string):void{
             const child = (this.$refs.addOrUpdate as any);
-            child.getDetails(id);
+            child.openWindow(id);
         }
 
         /**

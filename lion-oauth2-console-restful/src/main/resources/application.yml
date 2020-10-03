@@ -8,11 +8,11 @@ security:
   oauth2:
     client:
       scopes:
-          - scope: test
-            url:
-              - /test
-              - /test1
-          - scope: test1
-            url:
-              - /test2
-              - /test3
+        - scope: test
+          url:
+            - /test
+            - /test1
+        - scope: test1
+          url:
+            - /test2
+            - /test3
