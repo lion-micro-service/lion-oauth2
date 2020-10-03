@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
             .and()
                 .authorizeRequests()
-                .antMatchers("/oauth/**","/upms/**/login")
+                .antMatchers("/oauth/**")
                 .permitAll()
             .and()
                 .formLogin()

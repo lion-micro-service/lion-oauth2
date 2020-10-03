@@ -1,5 +1,6 @@
-package com.lion.authorization;
+package com.lion.authorization.configuration;
 
+import com.lion.authorization.LionTokenServices;
 import com.lion.authorization.handler.LionTokenEnhancer;
 import com.lion.authorization.handler.LionWebResponseExceptionTranslator;
 import org.springframework.context.annotation.Configuration;

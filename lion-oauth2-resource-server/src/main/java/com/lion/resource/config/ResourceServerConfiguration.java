@@ -1,4 +1,4 @@
-package com.lion.resource;
+package com.lion.resource.config;
 
 import com.lion.config.RestTemplateConfiguration;
 import com.lion.resource.config.AuthorizationIgnoreConfiguration;
@@ -31,7 +31,6 @@ import javax.annotation.Resource;
  * @author: Mr.Liu
  * @create: 2020-01-26 11:40
  */
-@Data
 @Configuration
 @EnableResourceServer
 @EnableGlobalMethodSecurity( prePostEnabled = true, securedEnabled = true, jsr250Enabled = true )
@@ -97,9 +96,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
      */
     protected ResourceServerTokenServices getResourceServerTokenServices(){
         RemoteTokenServices resourceServerTokenServices = new RemoteTokenServices();
-//        resourceServerTokenServices.setAccessTokenConverter(new DefaultAccessTokenConverter());
-        resourceServerTokenServices.setClientId("app");
-        resourceServerTokenServices.setClientSecret("app");
+        resourceServerTokenServices.setClientId("console");
+        resourceServerTokenServices.setClientSecret("console");
         resourceServerTokenServices.setCheckTokenEndpointUrl(resourceServerProperties.getTokenInfoUri());
         resourceServerTokenServices.setRestTemplate(restTemplate);
         return resourceServerTokenServices;

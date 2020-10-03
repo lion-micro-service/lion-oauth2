@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.lion.resource.config.AuthorizationIgnoreConfiguration,\
+com.lion.resource.config.ResourceServerConfiguration

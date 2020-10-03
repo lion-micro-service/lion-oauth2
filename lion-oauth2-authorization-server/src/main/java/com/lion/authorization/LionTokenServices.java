@@ -17,12 +17,11 @@ import javax.annotation.Resource;
 import java.util.Objects;
 
 /**
- * @description: 自定义token缓存（登陆成功后删除之前所有用户缓存数据）,主要作用（单设备登陆）
+ * @description: 自定义token缓存（登陆成功后删除之前所有用户缓存数据）,主要作用（单设备登陆-DefaultTokenServices不删除旧token会重复利用token导致能多设备登陆）
  * @author: Mr.Liu
  * @create: 2020-02-19 15:36
  */
 @Component
-@EnableAspectJAutoProxy
 public class LionTokenServices extends DefaultTokenServices  {
 
     @Resource
@@ -41,7 +40,6 @@ public class LionTokenServices extends DefaultTokenServices  {
         super.setClientDetailsService(clientDetailsService);
     }
 
-    @Transactional
     @Override
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
         OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);
