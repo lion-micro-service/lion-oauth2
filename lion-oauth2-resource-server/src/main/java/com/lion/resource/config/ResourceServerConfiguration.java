@@ -3,17 +3,25 @@ package com.lion.resource.config;
 import com.lion.config.RestTemplateConfiguration;
 import com.lion.resource.config.AuthorizationIgnoreConfiguration;
 import com.lion.resource.config.properties.AuthorizationIgnoreProperties;
+import com.lion.resource.config.properties.OauthClientScopeProperties;
+import com.lion.resource.enums.Scope;
 import com.lion.resource.handler.LionAuthenticationEntryPoint;
 import com.lion.resource.handler.LionAccessDeniedHandler;
+import jdk.internal.org.objectweb.asm.commons.RemappingAnnotationAdapter;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -25,6 +33,7 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * @description: 资源服务器配置
@@ -35,6 +44,8 @@ import javax.annotation.Resource;
 @EnableResourceServer
 @EnableGlobalMethodSecurity( prePostEnabled = true, securedEnabled = true, jsr250Enabled = true )
 @AutoConfigureAfter(AuthorizationIgnoreConfiguration.class)
+@ConditionalOnClass( {OauthClientScopeProperties.class} )
+@EnableConfigurationProperties(OauthClientScopeProperties.class)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Autowired
@@ -53,6 +64,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Resource
     private AuthorizationIgnoreProperties authorizationIgnoreProperties;
 
+    @Resource
+    private OauthClientScopeProperties oauthClientScopeProperties;
+
 //    @Value("${security.oauth2.resource.scope}")
 //    private String scope;
 
@@ -70,7 +84,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.csrf()
+        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry _http = http.csrf()
                 .disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -78,17 +92,28 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 .antMatchers(authorizationIgnoreProperties.getIgnoreUrl().toArray(new String[]{}))
                 .permitAll()
-//            .and()
-//                .authorizeRequests()
-//                .antMatchers("/**")
-//                .access( "#oauth2.hasScope('"+scope+"')")
             .and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.GET).access( "#oauth2.hasScope('"+Scope.READ.getName().toLowerCase()+"')")
+                .antMatchers(HttpMethod.POST).access( "#oauth2.hasScope('"+Scope.WRITE.getName().toLowerCase()+"')")
+                .antMatchers(HttpMethod.PUT).access( "#oauth2.hasScope('"+Scope.UPDATE.getName().toLowerCase()+"')")
+                .antMatchers(HttpMethod.DELETE).access( "#oauth2.hasScope('"+Scope.DELETE.getName().toLowerCase()+"')")
+                .antMatchers(HttpMethod.PATCH).access( "#oauth2.hasScope('"+Scope.UPDATE.getName().toLowerCase()+"')");
+                //动态从配置文件读取配置配置权限
+                if (Objects.nonNull(oauthClientScopeProperties.getScopes()) && oauthClientScopeProperties.getScopes().size()>0){
+                    oauthClientScopeProperties.getScopes().forEach(scopes -> {
+                        _http.antMatchers(scopes.getUrl().toArray(new String[]{})).access(scopes.getScope());
+                    });
+                }
+        _http.and()
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated();
 
 
     }
+
+
 
     /**
      * token校验服务

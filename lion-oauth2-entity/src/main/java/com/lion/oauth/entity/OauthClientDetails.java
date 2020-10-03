@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -46,12 +47,14 @@ public class OauthClientDetails extends BaseEntity {
     @Pattern(regexp = "[A-Za-z0-9\\-]{1,256}", message = "客户端密钥只能是1-256个(英文/数字)字符", groups = {Validator.Insert.class, Validator.Update.class})
     private String clientSecretPlaintext;
 
+    //数据源参考com.lion.resource.enums.Scope
     @Column(name = "scope",nullable = false, columnDefinition = " varchar(256) comment '客户端作用域' ")
     @Length(min = 1, max = 256, message = "客户端作用域为{min}-{max}个字符", groups = {Validator.Insert.class, Validator.Update.class})
     @NotBlank(message = "客户端作用域不能为空", groups = {Validator.Insert.class, Validator.Update.class})
     @Pattern(regexp = "[A-Za-z0-9\\-]{1,256}", message = "客户端作用域只能是1-256个(英文/数字)字符", groups = {Validator.Insert.class, Validator.Update.class})
     private String scope;
 
+    //数据源参考com.lion.resource.enums.GrantTypes
     @Column(name = "authorized_grant_types",nullable = false, columnDefinition = " varchar(256) comment '鉴权方式（authorization_code,password,client_credentials,implicit,refresh_token）多种方式用逗号隔开' ")
     @Length(min = 1, max = 256, message = "客户端作用域为{min}-{max}个字符", groups = {Validator.Insert.class, Validator.Update.class})
     @NotBlank(message = "客户端作用域不能为空", groups = {Validator.Insert.class, Validator.Update.class})
@@ -66,6 +69,8 @@ public class OauthClientDetails extends BaseEntity {
     private String authorities;
 
     @Column(name = "access_token_validity", columnDefinition = " INT(11) comment 'token有效期 （不设置默认43200秒）'")
+    @Min(value = 1, message = "token有效期必须大于1",groups = {Validator.Insert.class, Validator.Update.class})
+    @Pattern(regexp = "^(1|[0-9]*)$", message = "token有效期必须为正整数", groups = {Validator.Insert.class, Validator.Update.class})
     private Integer accessTokenValidity;
 
     @Column(name = "refresh_token_validity", columnDefinition = " INT(11) comment '刷新token有效期'")

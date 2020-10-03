@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @description:
+ * @description: 排除鉴权url
  * @author: Mr.Liu
  * @create: 2020-02-06 20:47
  */
