@@ -3,6 +3,7 @@ package com.lion.authorization;
 import com.lion.config.PasswordConfiguration;
 import com.lion.constant.DubboConstant;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,13 +32,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @DubboReference(cluster= DubboConstant.CLUSTER_FAILOVER,retries = 3)
     private UserDetailsService userDetailsService;
 
-    @Resource
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Resource
+    @Autowired
     private AuthenticationFailureHandler authenticationFailureHandler;
 
-    @Resource
+    @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Bean

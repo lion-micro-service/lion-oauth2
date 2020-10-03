@@ -96,8 +96,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
      */
     protected ResourceServerTokenServices getResourceServerTokenServices(){
         RemoteTokenServices resourceServerTokenServices = new RemoteTokenServices();
-        resourceServerTokenServices.setClientId("console");
-        resourceServerTokenServices.setClientSecret("console");
+        resourceServerTokenServices.setClientId("console");//此设置不知道为何没卵用，既然可以随便写-有待研究
+        resourceServerTokenServices.setClientSecret("console");//此设置不知道为何没卵用，既然可以随便写-有待研究
         resourceServerTokenServices.setCheckTokenEndpointUrl(resourceServerProperties.getTokenInfoUri());
         resourceServerTokenServices.setRestTemplate(restTemplate);
         return resourceServerTokenServices;

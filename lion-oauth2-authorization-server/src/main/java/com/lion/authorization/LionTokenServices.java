@@ -1,12 +1,14 @@
 package com.lion.authorization;
 
 import com.lion.authorization.handler.LionTokenEnhancer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.util.Objects;
 
 /**
@@ -24,20 +27,23 @@ import java.util.Objects;
 @Component
 public class LionTokenServices extends DefaultTokenServices  {
 
-    @Resource
+    @Autowired
     private TokenStore tokenStore;
 
-    @Resource
+    @Autowired
     private LionTokenEnhancer tokenEnhancer;
 
-    @Resource
+    @Autowired
     private ClientDetailsService clientDetailsService;
+
+    @Autowired
+    private DataSource dataSource;
 
     @PostConstruct
     public void init(){
         super.setTokenStore(tokenStore);
         super.setTokenEnhancer(tokenEnhancer);
-        super.setClientDetailsService(clientDetailsService);
+        super.setClientDetailsService(new JdbcClientDetailsService(dataSource));
     }
 
     @Override

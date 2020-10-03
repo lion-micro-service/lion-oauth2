@@ -3,6 +3,7 @@ package com.lion.authorization.configuration;
 import com.lion.authorization.LionTokenServices;
 import com.lion.authorization.handler.LionTokenEnhancer;
 import com.lion.authorization.handler.LionWebResponseExceptionTranslator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpMethod;
@@ -14,6 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
@@ -29,24 +31,23 @@ import javax.sql.DataSource;
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-    @Resource
+    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Resource
+    @Autowired
     private LionTokenEnhancer tokenEnhancer;
 
-    @Resource
+    @Autowired
     private LionWebResponseExceptionTranslator webResponseExceptionTranslator;
 
-    @Resource
+    @Autowired
     private TokenStore tokenStore;
 
-    @Resource
+    @Autowired
     private LionTokenServices tokenServices;
 
-    @Resource
-    private ClientDetailsService clientDetailsService;
-
+    @Autowired
+    private DataSource dataSource;
 
     /**
      * 配置token存储和发放
@@ -83,7 +84,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
      */
     @Override
     public void configure ( ClientDetailsServiceConfigurer clients ) throws Exception {
-        clients.withClientDetails(clientDetailsService);
+        clients.withClientDetails(new JdbcClientDetailsService(dataSource));
     }
 
 }
