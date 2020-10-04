@@ -1,5 +1,5 @@
 {
-  "name": "@lion/lion-common-console-front",
+  "name": "@lion/lion-oauth2-console-front",
   "version": "1.0.0",
   "description": "common后台管理前端",
   "private": false,

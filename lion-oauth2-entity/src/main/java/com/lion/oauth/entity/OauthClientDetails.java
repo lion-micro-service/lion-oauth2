@@ -48,10 +48,10 @@ public class OauthClientDetails extends BaseEntity {
     private String clientSecretPlaintext;
 
     //数据源参考com.lion.resource.enums.Scope
-    @Column(name = "scope",nullable = false, columnDefinition = " varchar(256) comment '客户端作用域' ")
-    @Length(min = 1, max = 256, message = "客户端作用域为{min}-{max}个字符", groups = {Validator.Insert.class, Validator.Update.class})
-    @NotBlank(message = "客户端作用域不能为空", groups = {Validator.Insert.class, Validator.Update.class})
-    @Pattern(regexp = "[A-Za-z0-9\\,]{1,256}", message = "客户端作用域只能是1-256个(英文/数字)字符", groups = {Validator.Insert.class, Validator.Update.class})
+    @Column(name = "scope",nullable = false, columnDefinition = " varchar(256) comment '客户端权限范围' ")
+    @Length(min = 1, max = 256, message = "客户端权限范围为{min}-{max}个字符", groups = {Validator.Insert.class, Validator.Update.class})
+    @NotBlank(message = "客户端权限范围不能为空", groups = {Validator.Insert.class, Validator.Update.class})
+    @Pattern(regexp = "[A-Za-z0-9\\,]{1,256}", message = "客户端权限范围只能是1-256个(英文/数字)字符", groups = {Validator.Insert.class, Validator.Update.class})
     private String scope;
 
     //数据源参考com.lion.resource.enums.GrantTypes

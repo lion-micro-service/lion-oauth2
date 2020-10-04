@@ -45,6 +45,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
      * @return
      */
     @GetMapping("/list")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')")
     public IResultData list(LionPage lionPage,String clientId){
         JpqlParameter jpqlParameter = new JpqlParameter();
         if (StringUtils.hasText(clientId)){
@@ -61,6 +62,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
      * @return
      */
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_ADD')")
     public IResultData add(@RequestBody @Validated({Validator.Insert.class}) OauthClientDetails oauthClientDetails){
         if (oauthClientDetailsService.checkClientIdIsExist(oauthClientDetails.getClientId())){
             new BusinessException("该客户端id已存在");
@@ -76,6 +78,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
      * @return
      */
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_UPDATE')")
     public IResultData update(@RequestBody @Validated({Validator.Update.class}) OauthClientDetails oauthClientDetails){
         if (oauthClientDetailsService.checkClientIdIsExist(oauthClientDetails.getClientId(),oauthClientDetails.getId())){
             new BusinessException("该客户端id已存在");
@@ -113,6 +116,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
      * @return
      */
     @DeleteMapping("/delete")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_DELETE')")
     public IResultData delete(@NotNull(message = "id不能为空") @RequestParam(value = "id",required = false) List<Long> id){
         id.forEach(i->{
             oauthClientDetailsService.deleteById(i);
@@ -141,6 +145,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
 //    @PreAuthorize("hasAuthority('user_console_list1')")
 //    @PreAuthorize("hasAnyAuthority('add,update')")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public IResultData test1(){
         return ResultData.instance().setData("test1","test1");
     }

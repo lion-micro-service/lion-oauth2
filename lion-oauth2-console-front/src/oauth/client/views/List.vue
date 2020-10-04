@@ -14,8 +14,8 @@
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
                             <a-button style="margin-left: 5px;" type="primary" icon="search"  @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
-                            <a-button style="margin-left: 5px;" type="primary" icon="file-add" @click="add()">新增</a-button>
-                            <a-button style="margin-left: 5px;" type="danger" icon="delete"  @click="del(null)">删除</a-button>
+                            <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_ADD')" type="primary" icon="file-add" @click="add()">新增</a-button>
+                            <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_DELETE')" type="danger" icon="delete"  @click="del(null)">删除</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -25,8 +25,8 @@
         <a-card class="card" :bordered="false">
             <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
                 <span slot="action" slot-scope="text, record">
-                    <a-button style="margin-left: 5px;" icon="edit" size="small" @click="edit(record.id)">修改</a-button>
-                    <a-button style="margin-left: 5px;" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+                    <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_UPDATE')" icon="edit" size="small" @click="edit(record.id)">修改</a-button>
+                    <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_DELETE')" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
         </a-card>
@@ -41,6 +41,7 @@
     import { message } from 'ant-design-vue';
     import addOrUpdate from "@/oauth/client/components/addOrUpdate.vue";
     import qs from "qs";
+    import authority from "@lion/lion-front-core/src/security/authority";
     @Component({components:{addOrUpdate}})
     export default class list extends Vue{
         //查询数据模型
@@ -184,6 +185,13 @@
                 }).catch((fail)=>{
             }).finally(()=>{
             });
+        }
+
+        /**
+         * 判断(获取)是否有权限
+         */
+        private getAuthority(authorityCode:string):any{
+            return authority(authorityCode);
         }
     }
 </script>
