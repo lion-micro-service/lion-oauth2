@@ -3,16 +3,3 @@ lion:
   enums:
     - com.lion.resource.enums.Scope
     - com.lion.resource.enums.GrantTypes
-#动态配置oauth2客户端权限
-security:
-  oauth2:
-    client:
-      scopes:
-        - scope: test
-          url:
-            - /test
-            - /test1
-        - scope: test1
-          url:
-            - /test2
-            - /test3

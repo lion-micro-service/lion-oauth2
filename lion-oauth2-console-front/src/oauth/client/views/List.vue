@@ -59,6 +59,7 @@
             { title: '客户端id', dataIndex: 'clientId', key: 'clientId',width: 100},
             { title: '客户端密钥', dataIndex: 'clientSecretPlaintext', key: 'clientSecretPlaintext' ,width: 120},
             { title: '客户端资源', dataIndex: 'resourceIds', key: 'resourceIds'},
+            { title: '授权方式', dataIndex: 'authorizedGrantTypes', key: 'authorizedGrantTypes',width: 300},
             { title: '权限', dataIndex: 'scope', key: 'scope',width: 300},
             { title: 'token有效期（秒）', dataIndex: 'accessTokenValidity', key: 'accessTokenValidity',width: 180},
             { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 200,}
@@ -171,7 +172,7 @@
          * @param id
          */
         private delete(id:any):void{
-            axios.delete("/common/parameter/console/delete",{params:{id:id},
+            axios.delete("/oauth/client/console/delete",{params:{id:id},
                 paramsSerializer: params => {
                     return qs.stringify(params, { indices: false })
                 }})

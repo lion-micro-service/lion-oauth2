@@ -13,6 +13,7 @@ import com.lion.oauth.entity.OauthClientDetails;
 import com.lion.oauth.service.OauthClientDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -119,4 +120,49 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
         ResultData resultData = ResultData.instance();
         return resultData;
     }
+
+    /**
+     * 测试动态配置权限（nacos/resources下的配置文件配置）
+     * @return
+     */
+    @GetMapping("/test")
+    @PreAuthorize("#oauth2.hasScope('test')")
+    public IResultData test(){
+        return ResultData.instance().setData("test","test");
+    }
+
+    /**
+     * 测试动态配置权限（nacos/resources下的配置文件配置）
+     * @return
+     */
+    @GetMapping("/test1")
+    @PreAuthorize("#oauth2.hasScope('test')")
+//    @PreAuthorize(value = "#oauth2.hasAnyScope('servera','serverb','serverc')")
+//    @PreAuthorize("hasAuthority('user_console_list1')")
+//    @PreAuthorize("hasAnyAuthority('add,update')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public IResultData test1(){
+        return ResultData.instance().setData("test1","test1");
+    }
+
+    /**
+     * 测试动态配置权限（nacos/resources下的配置文件配置）
+     * @return
+     */
+    @GetMapping("/test2")
+    @PreAuthorize("#oauth2.hasScope('test1')")
+    public IResultData test2(){
+        return ResultData.instance().setData("test2","test2");
+    }
+
+    /**
+     * 测试动态配置权限（nacos/resources下的配置文件配置）
+     * @return
+     */
+    @GetMapping("/test3")
+    @PreAuthorize("#oauth2.hasScope('test1')")
+    public IResultData test3(){
+        return ResultData.instance().setData("test3","test3");
+    }
+
 }
