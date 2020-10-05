@@ -90,6 +90,15 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
+                .antMatchers("/webjars/**",
+                        "/resources/**",
+                        "/swagger-ui.html",
+                        "/swagger-resources/**",
+                        "/v3/api-docs",
+                        "/swagger-ui/**",
+                        "index.html").permitAll()
+            .and()
+                .authorizeRequests()
                 .antMatchers(authorizationIgnoreProperties.getIgnoreUrl().toArray(new String[]{}))
                 .permitAll();
             //动态从配置文件读取配置配置权限(必须优先与以下配置设置否则被以下规则优先拦截会导致该配置无效)
@@ -105,8 +114,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers(HttpMethod.PUT).access( "#oauth2.hasScope('"+Scope.UPDATE.getName().toLowerCase()+"')")
                 .antMatchers(HttpMethod.DELETE).access( "#oauth2.hasScope('"+Scope.DELETE.getName().toLowerCase()+"')")
                 .antMatchers(HttpMethod.PATCH).access( "#oauth2.hasScope('"+Scope.UPDATE.getName().toLowerCase()+"')")
-
-
             .and()
                 .authorizeRequests()
                 .anyRequest()
