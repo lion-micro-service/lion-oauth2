@@ -92,11 +92,11 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 .antMatchers("/webjars/**",
                         "/resources/**",
-                        "/swagger-ui.html",
                         "/swagger-resources/**",
-                        "/v3/api-docs",
+                        "/v3/**",
                         "/swagger-ui/**",
-                        "index.html").permitAll()
+                        "/favicon.ico"
+                ).permitAll()
             .and()
                 .authorizeRequests()
                 .antMatchers(authorizationIgnoreProperties.getIgnoreUrl().toArray(new String[]{}))
