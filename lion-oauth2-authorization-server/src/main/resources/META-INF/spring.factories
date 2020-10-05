@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.lion.authorization.configuration.AuthorizationConfiguration,\
 com.lion.authorization.configuration.AuthorizationServerConfiguration,\
-com.lion.authorization.WebSecurityConfig
+com.lion.authorization.configuration.WebSecurityConfig

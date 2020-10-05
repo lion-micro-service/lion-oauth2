@@ -1,5 +1,6 @@
-package com.lion.authorization;
+package com.lion.authorization.configuration;
 
+import com.lion.authorization.handler.LionLogoutHandler;
 import com.lion.config.PasswordConfiguration;
 import com.lion.constant.DubboConstant;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -12,10 +13,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import javax.annotation.Resource;
 
@@ -28,6 +32,9 @@ import javax.annotation.Resource;
 @AutoConfigureAfter(PasswordConfiguration.class)
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private TokenStore tokenStore;
 
     @DubboReference(cluster= DubboConstant.CLUSTER_FAILOVER,retries = 3)
     private UserDetailsService userDetailsService;
@@ -68,6 +75,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
             .and()
                 .logout()
+                .addLogoutHandler(new LionLogoutHandler(tokenStore))
+                .invalidateHttpSession(true)
                 .permitAll()
             .and()
                 .authorizeRequests()
