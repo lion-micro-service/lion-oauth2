@@ -41,15 +41,17 @@ public class LionLogoutHandler implements LogoutHandler {
             token = token.replace("Bearer","").trim();
         }
         OAuth2Authentication oAuth2Authentication = tokenStore.readAuthentication(token);
-        OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(oAuth2Authentication);
-        if (Objects.nonNull(existingAccessToken)){
-            tokenStore.removeAccessToken(existingAccessToken);
+        if (Objects.nonNull(oAuth2Authentication)) {
+            OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(oAuth2Authentication);
+            if (Objects.nonNull(existingAccessToken)) {
+                tokenStore.removeAccessToken(existingAccessToken);
+            }
         }
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=UTF-8");
         ResultData resultData = ResultData.instance();
         PrintWriter printWriter = response.getWriter();
-        resultData.setMessage("退出登陆");
+        resultData.setMessage("退出登陆成功");
         printWriter.write(JsonUtil.convertToJsonString(resultData));
         printWriter.flush();
     }

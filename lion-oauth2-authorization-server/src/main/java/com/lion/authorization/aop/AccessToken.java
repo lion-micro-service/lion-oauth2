@@ -2,14 +2,21 @@ package com.lion.authorization.aop;
 
 import com.lion.aop.exception.ExceptionData;
 import com.lion.core.ResultData;
+import com.lion.exception.BusinessException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 /**
@@ -21,13 +28,18 @@ import java.util.Objects;
 @Component
 @Aspect
 public class AccessToken {
-    /// @Around是可以改变controller返回值的
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+
     @Around("execution(* org.springframework.security.oauth2.provider.endpoint.TokenEndpoint.postAccessToken(..))" +
             "|| execution(* org.springframework.security.oauth2.provider.endpoint.TokenEndpoint.getAccessToken(..))")
     public Object handleControllerMethod(ProceedingJoinPoint pjp) {
         ResultData resultData = new ResultData();
         Object proceed = null;
         try {
+            validateCaptcha();
             proceed = pjp.proceed();
         }catch (Throwable e){
             resultData = ExceptionData.instance(e);
@@ -43,4 +55,20 @@ public class AccessToken {
         }
         return ResponseEntity.status(200).body(resultData);
     }
+
+    private void validateCaptcha(){
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
+        String vcode = request.getParameter("vcode");
+        String verKey = request.getParameter("verKey");
+        if (!(StringUtils.hasText(vcode)&&StringUtils.hasText(verKey))){
+            return;
+        }
+        String code = redisTemplate.opsForValue().get(verKey);
+        if (!Objects.equals(vcode.toLowerCase().trim(),code)){
+            new BusinessException("验证码错误");
+        }
+    }
+
+
 }
