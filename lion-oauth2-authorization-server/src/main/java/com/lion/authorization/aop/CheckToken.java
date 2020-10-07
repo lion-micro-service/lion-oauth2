@@ -58,7 +58,7 @@ public class CheckToken {
     }
 
     /**
-     * 续期token有效期
+     * 续期token有效期（也可以在LionRedisTokenStore中重写readAuthentication等方法续期token）
      * @param token
      */
     private void renewalTokenValidity(String token){

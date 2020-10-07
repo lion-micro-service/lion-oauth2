@@ -1,6 +1,8 @@
 package com.lion.authorization;
 
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 /**
@@ -13,6 +15,5 @@ public class LionRedisTokenStore extends RedisTokenStore {
     public LionRedisTokenStore(RedisConnectionFactory connectionFactory) {
         super(connectionFactory);
     }
-
 
 }

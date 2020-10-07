@@ -1,5 +1,6 @@
 package com.lion.authorization.configuration;
 
+import com.lion.authorization.filter.CaptchaFilter;
 import com.lion.authorization.handler.LionLogoutHandler;
 import com.lion.config.PasswordConfiguration;
 import com.lion.constant.DubboConstant;
@@ -16,9 +17,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.token.TokenService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import javax.annotation.Resource;
@@ -62,7 +65,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure ( HttpSecurity http ) throws Exception {
-        http.requestMatchers()
+        CaptchaFilter captchaFilter = new CaptchaFilter();
+
+        http.addFilter(captchaFilter)
+                .requestMatchers()
                 .anyRequest()
             .and()
                 .authorizeRequests()
