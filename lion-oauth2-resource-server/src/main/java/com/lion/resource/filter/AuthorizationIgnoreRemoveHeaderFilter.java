@@ -52,8 +52,9 @@ public class AuthorizationIgnoreRemoveHeaderFilter implements Filter  {
                 }
             };
             filterChain.doFilter(requestWrapper,servletResponse );
+        }else {
+            filterChain.doFilter(servletRequest, servletResponse);
         }
-        filterChain.doFilter(servletRequest,servletResponse );
     }
 
 
