@@ -49,4 +49,3 @@ spring:
 #  unsupported_response_type 	21329 	不支持的 ResponseType
 #  access_denied 	21330 	用户或授权服务器拒绝授予数据访问权限
 #  temporarily_unavailable 	21331 	服务暂时无法访问
-

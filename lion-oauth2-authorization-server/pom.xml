@@ -13,6 +13,8 @@
     <version>${project.parent.version}</version>
 
     <properties>
+        <lion-core.version>1.0.0-SNAPSHOT</lion-core.version>
+        <lion-expose-starter.version>1.0.0-SNAPSHOT</lion-expose-starter.version>
     </properties>
 
     <dependencies>
@@ -69,7 +71,12 @@
         <dependency>
             <groupId>com.lion</groupId>
             <artifactId>lion-core</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${lion-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lion</groupId>
+            <artifactId>lion-expose-starter</artifactId>
+            <version>${lion-expose-starter.version}</version>
         </dependency>
     </dependencies>
 
