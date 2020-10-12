@@ -23,6 +23,9 @@ spring:
           - data-id: lion-dubbo-common.${spring.cloud.nacos.config.file-extension}
             refresh: true
             group: GLOBAL_GROUP
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    type: com.zaxxer.hikari.HikariDataSource
 #security:
 #  user:
 #    name: user

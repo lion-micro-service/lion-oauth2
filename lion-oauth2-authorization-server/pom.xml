@@ -69,6 +69,10 @@
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.lion</groupId>
             <artifactId>lion-core</artifactId>
             <version>${lion-core.version}</version>
