@@ -86,18 +86,13 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
-                .antMatchers("/webjars/**",
-                        "/resources/**",
-                        "/swagger-resources/**",
-                        "/v3/**",
-                        "/swagger-ui/**",
-                        "/favicon.ico"
-                ).permitAll()
+                .antMatchers("/webjars/**","/resources/**","/swagger-resources/**","/v3/**","/swagger-ui/**", "/favicon.ico")
+                .permitAll()
             .and()
                 .authorizeRequests()
                 .antMatchers(authorizationIgnoreProperties.getIgnoreUrl().toArray(new String[]{}))
                 .permitAll();
-            //动态从配置文件读取配置配置权限(必须优先与以下配置设置否则被以下规则优先拦截会导致该配置无效)
+            //动态从配置文件读取配置配置权限(必须优先与以下配置设置否则会被以下规则优先拦截会导致该配置无效)
             if (Objects.nonNull(oauthClientScopeProperties.getScopes()) && oauthClientScopeProperties.getScopes().size()>0){
                 oauthClientScopeProperties.getScopes().forEach(scopes -> {
                     _http.antMatchers(scopes.getUrl().toArray(new String[]{})).access("#oauth2.hasScope('"+scopes.getScope()+"')");

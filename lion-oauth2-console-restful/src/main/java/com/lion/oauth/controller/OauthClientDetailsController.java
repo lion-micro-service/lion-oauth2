@@ -3,6 +3,7 @@ package com.lion.oauth.controller;
 import com.lion.constant.SearchConstant;
 import com.lion.core.IResultData;
 import com.lion.core.LionPage;
+import com.lion.core.PageResultData;
 import com.lion.core.ResultData;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
@@ -46,14 +47,14 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
      */
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')")
-    public IResultData list(LionPage lionPage,String clientId){
+    public PageResultData<List<OauthClientDetails>> list(LionPage lionPage, String clientId){
         JpqlParameter jpqlParameter = new JpqlParameter();
         if (StringUtils.hasText(clientId)){
             jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_clientId",clientId);
         }
         jpqlParameter.setSortParameter("createDateTime", Sort.Direction.DESC);
         lionPage.setJpqlParameter(jpqlParameter);
-        return (IResultData) oauthClientDetailsService.findNavigator(lionPage);
+        return (PageResultData) oauthClientDetailsService.findNavigator(lionPage);
     }
 
     /**
@@ -95,8 +96,8 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
      * @return
      */
     @GetMapping("/check/clientId/exist")
-    public IResultData checkClientIdExist(@NotBlank(message = "客户端id不能为空")String clientId, Long id){
-        return ResultData.instance().setData("isExist",oauthClientDetailsService.checkClientIdIsExist(clientId, id));
+    public IResultData<Boolean> checkClientIdExist(@NotBlank(message = "客户端id不能为空")String clientId, Long id){
+        return ResultData.instance().setData(oauthClientDetailsService.checkClientIdIsExist(clientId, id));
     }
 
     /**
@@ -105,9 +106,9 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
      * @return
      */
     @GetMapping("/details")
-    public IResultData details(@NotNull(message = "id不能为空") Long id){
+    public IResultData<OauthClientDetails> details(@NotNull(message = "id不能为空") Long id){
         OauthClientDetails oauthClientDetails = oauthClientDetailsService.findById(id);
-        return ResultData.instance().setData("oauthClientDetails",oauthClientDetails);
+        return ResultData.instance().setData(oauthClientDetails);
     }
 
     /**
@@ -132,7 +133,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
     @GetMapping("/test")
     @PreAuthorize("#oauth2.hasScope('test')")
     public IResultData test(){
-        return ResultData.instance().setData("test","test");
+        return ResultData.instance();
     }
 
     /**
@@ -147,7 +148,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
 //    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public IResultData test1(){
-        return ResultData.instance().setData("test1","test1");
+        return ResultData.instance();
     }
 
     /**
@@ -157,7 +158,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
     @GetMapping("/test2")
     @PreAuthorize("#oauth2.hasScope('test1')")
     public IResultData test2(){
-        return ResultData.instance().setData("test2","test2");
+        return ResultData.instance();
     }
 
     /**
@@ -167,7 +168,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
     @GetMapping("/test3")
     @PreAuthorize("#oauth2.hasScope('test1')")
     public IResultData test3(){
-        return ResultData.instance().setData("test3","test3");
+        return ResultData.instance();
     }
 
 }
