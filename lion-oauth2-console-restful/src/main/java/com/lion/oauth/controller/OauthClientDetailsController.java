@@ -1,10 +1,7 @@
 package com.lion.oauth.controller;
 
 import com.lion.constant.SearchConstant;
-import com.lion.core.IResultData;
-import com.lion.core.LionPage;
-import com.lion.core.PageResultData;
-import com.lion.core.ResultData;
+import com.lion.core.*;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.JpqlParameter;
@@ -46,7 +43,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')")
     @ApiOperation(value = "列表",notes = "列表")
-    public PageResultData<List<OauthClientDetails>> list(LionPage lionPage, String clientId){
+    public IPageResultData<List<OauthClientDetails>> list(LionPage lionPage, String clientId){
         JpqlParameter jpqlParameter = new JpqlParameter();
         if (StringUtils.hasText(clientId)){
             jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_clientId",clientId);

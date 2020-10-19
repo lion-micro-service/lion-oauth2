@@ -86,7 +86,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
-                .antMatchers("/webjars/**","/resources/**","/swagger-resources/**","/v3/**","/swagger-ui/**", "/favicon.ico")
+                .antMatchers("/webjars/**","/resources/**","/swagger-resources/**","/v2/**","/v3/**","/swagger-ui/**", "/favicon.ico")
                 .permitAll()
             .and()
                 .authorizeRequests()
