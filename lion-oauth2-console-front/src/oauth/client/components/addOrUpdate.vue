@@ -99,7 +99,7 @@
                             callback(new Error('异常错误！请检查'));
                             return;
                         }
-                        if (data.data.isExist) {
+                        if (data.data) {
                             callback(new Error('客户端id已存在'));
                         }else {
                             callback();
@@ -156,10 +156,10 @@
         private async getDetails(id:string){
             await axios.get("/oauth/client/console/details",{params:{"id":id}})
             .then((data)=>{
-                if (Object(data).status === 200 && data.data.oauthClientDetails){
-                    this.addOrUpdateModel=data.data.oauthClientDetails;
-                    this.addOrUpdateModel.scopes=data.data.oauthClientDetails.scope.split(',');
-                    this.addOrUpdateModel.grantTypes=data.data.oauthClientDetails.authorizedGrantTypes.split(',');
+                if (Object(data).status === 200 && data.data){
+                    this.addOrUpdateModel=data.data;
+                    this.addOrUpdateModel.scopes=data.data.scope.split(',');
+                    this.addOrUpdateModel.grantTypes=data.data.authorizedGrantTypes.split(',');
                 }
             })
             .catch(fail => {
@@ -174,7 +174,7 @@
         private async getSelectDate(){
             await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.resource.enums.Scope"}})
             .then((data) => {
-                this.scopes = data.data.enum;
+                this.scopes = data.data;
             })
             .catch(fail => {
             })
@@ -182,7 +182,7 @@
             });
             await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.resource.enums.GrantTypes"}})
             .then((data) => {
-                this.authorizedGrantTypes = data.data.enum;
+                this.authorizedGrantTypes = data.data;
             })
             .catch(fail => {
             })

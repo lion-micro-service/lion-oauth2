@@ -102,7 +102,7 @@
             this.loading=true;
             axios.get("/oauth/client/console/list",{params:this.searchModel})
                 .then((data)=>{
-                    this.data=data.data.list;
+                    this.data=data.data;
                     this.paginationProps.total=Number((Object(data)).totalElements);
                     this.paginationProps.current=(Object(data)).pageNumber;
                     this.paginationProps.pageSize=(Object(data)).pageSize;
