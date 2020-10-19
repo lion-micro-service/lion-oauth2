@@ -10,7 +10,6 @@
 	</parent>
 	<artifactId>lion-oauth2-business</artifactId>
 	<packaging>jar</packaging>
-	<version>${project.parent.version}</version>
 
 	<dependencies>
 		<dependency>

@@ -10,7 +10,7 @@
     </parent>
     <artifactId>lion-oauth2-resource-server</artifactId>
     <packaging>jar</packaging>
-    <version>${project.parent.version}</version>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>

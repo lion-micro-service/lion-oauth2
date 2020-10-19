@@ -3,6 +3,8 @@ package com.lion.oauth.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -25,36 +27,40 @@ import javax.validation.constraints.Pattern;
 @DynamicUpdate
 @DynamicInsert
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true,value = {"createDateTime","updateDateTime","createUserId","updateUserId"})
+@ApiModel(description = "oauth2客户端信息表")
 public class OauthClientDetails extends BaseEntity {
 
+    @ApiModelProperty(value = "客户端id")
     @Column(name = "client_id",nullable = false,unique = true,columnDefinition = " varchar(256) comment '客户端id' ")
     @NotBlank(message = "客户端id不能为空", groups = {Validator.Insert.class, Validator.Update.class})
     @Length(min = 1, max = 256, message = "客户端id为{min}-{max}个字符", groups = {Validator.Insert.class, Validator.Update.class})
     @Pattern(regexp = "[A-Za-z0-9\\-]{1,256}", message = "客户端id只能是1-256(英文/数字)字符", groups = {Validator.Insert.class, Validator.Update.class})
     private String clientId;
 
+    @ApiModelProperty(value = "资源id")
     @Column(name = "resource_ids", columnDefinition = " varchar(256) comment '资源id' ")
     @Pattern(regexp = "[A-Za-z0-9\\-]{0,256}", message = "客户端只能是0-256(英文/数字)字符", groups = {Validator.Insert.class, Validator.Update.class})
     private String resourceIds;
 
+    @ApiModelProperty(value = "客户端密钥")
     @Column(name = "client_secret",nullable = false, columnDefinition = " varchar(256) comment '客户端密钥' ")
     private String clientSecret;
 
+    @ApiModelProperty(value = "客户端密钥明文（用于编辑显示）")
     @Column(name = "client_secret_plaintext",nullable = false, columnDefinition = " varchar(256) comment '客户端密钥明文（用于编辑显示）' ")
     @NotBlank(message = "客户端密钥不能为空", groups = {Validator.Insert.class, Validator.Update.class})
     @Length(min = 1, max = 256, message = "客户端密钥为{min}-{max}个字符", groups = {Validator.Insert.class, Validator.Update.class})
     @Pattern(regexp = "[A-Za-z0-9\\-]{1,256}", message = "客户端密钥只能是1-256个(英文/数字)字符", groups = {Validator.Insert.class, Validator.Update.class})
     private String clientSecretPlaintext;
 
-    //数据源参考com.lion.resource.enums.Scope
+    @ApiModelProperty(value = "客户端权限范围(数据源参考com.lion.resource.enums.Scope)")
     @Column(name = "scope",nullable = false, columnDefinition = " varchar(256) comment '客户端权限范围' ")
     @Length(min = 1, max = 256, message = "客户端权限范围为{min}-{max}个字符", groups = {Validator.Insert.class, Validator.Update.class})
     @NotBlank(message = "客户端权限范围不能为空", groups = {Validator.Insert.class, Validator.Update.class})
     @Pattern(regexp = "[A-Za-z0-9\\,]{1,256}", message = "客户端权限范围只能是1-256个(英文/数字)字符", groups = {Validator.Insert.class, Validator.Update.class})
     private String scope;
 
-    //数据源参考com.lion.resource.enums.GrantTypes
+    @ApiModelProperty(value = "鉴权方式(数据源参考com.lion.resource.enums.GrantTypes)")
     @Column(name = "authorized_grant_types",nullable = false, columnDefinition = " varchar(256) comment '鉴权方式（authorization_code,password,client_credentials,implicit,refresh_token）多种方式用逗号隔开' ")
     @Length(min = 1, max = 256, message = "客户端鉴权方式为{min}-{max}个字符", groups = {Validator.Insert.class, Validator.Update.class})
     @NotBlank(message = "客户端鉴权方式不能为空", groups = {Validator.Insert.class, Validator.Update.class})
@@ -62,24 +68,30 @@ public class OauthClientDetails extends BaseEntity {
 //    @Pattern(regexp = "[A-Za-z0-9\\-]{1,256}", message = "客户端鉴权方式只能是1-256个(英文/数字)字符", groups = {Validator.Insert.class, Validator.Update.class})
     private String authorizedGrantTypes;
 
+    @ApiModelProperty()
     @Column(name = "web_server_redirect_uri", columnDefinition = " varchar(256) comment ''")
     private String webServerRedirectUri;
 
+    @ApiModelProperty()
     @Column(name = "authorities", columnDefinition = " varchar(256) comment ''")
     private String authorities;
 
+    @ApiModelProperty(value = "token有效期 （不设置默认43200秒）")
     @Column(name = "access_token_validity", columnDefinition = " INT(11) comment 'token有效期 （不设置默认43200秒）'")
     @Min(value = 1, message = "token有效期必须大于1",groups = {Validator.Insert.class, Validator.Update.class})
     //似乎不能正则数字类型
 //    @Pattern(regexp = "^[1-9]+[0-9]*$", message = "token有效期必须为正整数", groups = {Validator.Insert.class, Validator.Update.class})
     private Integer accessTokenValidity;
 
+    @ApiModelProperty(value = "刷新token有效期")
     @Column(name = "refresh_token_validity", columnDefinition = " INT(11) comment '刷新token有效期'")
     private Integer refreshTokenValidity;
 
+    @ApiModelProperty()
     @Column(name = "additional_information", columnDefinition = " varchar(4096) comment ''")
     private String additionalInformation;
 
+    @ApiModelProperty()
     @Column(name = "autoapprove", columnDefinition = " varchar(256) comment ''")
     private String autoapprove;
 

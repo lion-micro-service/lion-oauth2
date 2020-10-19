@@ -12,6 +12,9 @@ import com.lion.core.persistence.Validator;
 import com.lion.exception.BusinessException;
 import com.lion.oauth.entity.OauthClientDetails;
 import com.lion.oauth.service.OauthClientDetailsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +34,7 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/oauth/client/console")
+@Api(tags = {"oauth2客户端管理"})
 public class OauthClientDetailsController extends BaseControllerImpl implements BaseController {
 
     @Autowired
@@ -39,14 +43,9 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    /**
-     * 列表
-     * @param lionPage
-     * @param clientId
-     * @return
-     */
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')")
+    @ApiOperation(value = "列表",notes = "列表")
     public PageResultData<List<OauthClientDetails>> list(LionPage lionPage, String clientId){
         JpqlParameter jpqlParameter = new JpqlParameter();
         if (StringUtils.hasText(clientId)){
@@ -57,11 +56,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
         return (PageResultData) oauthClientDetailsService.findNavigator(lionPage);
     }
 
-    /**
-     * 添加客户端
-     * @param oauthClientDetails
-     * @return
-     */
+    @ApiOperation(value = "添加客户端",notes = "添加客户端")
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_ADD')")
     public IResultData add(@RequestBody @Validated({Validator.Insert.class}) OauthClientDetails oauthClientDetails){
@@ -73,11 +68,7 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
         return ResultData.instance();
     }
 
-    /**
-     * 修改客户端
-     * @param oauthClientDetails
-     * @return
-     */
+    @ApiOperation(value = "修改客户端",notes = "修改客户端")
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_UPDATE')")
     public IResultData update(@RequestBody @Validated({Validator.Update.class}) OauthClientDetails oauthClientDetails){
@@ -89,36 +80,23 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
         return ResultData.instance();
     }
 
-    /**
-     * 检查客户端id是否存在
-     * @param clientId
-     * @param id
-     * @return
-     */
+    @ApiOperation(value = "检查客户端id是否存在",notes = "检查客户端id是否存在")
     @GetMapping("/check/clientId/exist")
-    public IResultData<Boolean> checkClientIdExist(@NotBlank(message = "客户端id不能为空")String clientId, Long id){
+    public IResultData<Boolean> checkClientIdExist(@NotBlank(message = "客户端id不能为空")String clientId,@ApiParam(value = "修改时需要传,新增时不需要传") Long id){
         return ResultData.instance().setData(oauthClientDetailsService.checkClientIdIsExist(clientId, id));
     }
 
-    /**
-     * 获取详情
-     * @param id
-     * @return
-     */
     @GetMapping("/details")
+    @ApiOperation(value = "获取详情",notes = "获取详情")
     public IResultData<OauthClientDetails> details(@NotNull(message = "id不能为空") Long id){
         OauthClientDetails oauthClientDetails = oauthClientDetailsService.findById(id);
         return ResultData.instance().setData(oauthClientDetails);
     }
 
-    /**
-     * 删除客户端
-     * @param id
-     * @return
-     */
     @DeleteMapping("/delete")
+    @ApiOperation(value = "删除客户端",notes = "删除客户端")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_DELETE')")
-    public IResultData delete(@NotNull(message = "id不能为空") @RequestParam(value = "id",required = false) List<Long> id){
+    public IResultData delete(@NotNull(message = "id不能为空") @RequestParam(value = "id",required = false)  @ApiParam(value = "数组(id=1&id=2)") List<Long> id){
         id.forEach(i->{
             oauthClientDetailsService.deleteById(i);
         });

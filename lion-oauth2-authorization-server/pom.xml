@@ -10,7 +10,6 @@
     </parent>
     <artifactId>lion-oauth2-authorization-server</artifactId>
     <packaging>jar</packaging>
-    <version>${project.parent.version}</version>
 
     <properties>
         <lion-core.version>1.0.0-SNAPSHOT</lion-core.version>
