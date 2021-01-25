@@ -50,7 +50,7 @@ public enum Scope implements IEnum {
     }
 
     @JsonCreator
-    public static Scope getScope(String name){
+    public static Scope instance(String name){
         for(Scope item : values()){
             if(Objects.equals(item.getName(),name)){
                 return item;
