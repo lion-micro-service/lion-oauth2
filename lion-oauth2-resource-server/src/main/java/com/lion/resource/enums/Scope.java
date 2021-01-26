@@ -50,16 +50,28 @@ public enum Scope implements IEnum {
     }
 
     @JsonCreator
-    public static Scope instance(String name){
+    public static Scope instance(Object value){
+        if (value instanceof Integer) {
+            return instance((Integer) value);
+        }
+        return instance(String.valueOf(value));
+    }
+
+    private static Scope instance(Integer key){
         for(Scope item : values()){
-            if(Objects.equals(item.getName(),name)){
+            if (item.getKey()==key){
                 return item;
             }
         }
         return null;
     }
 
-    public static void main(String agrs[]){
-        System.out.println(Scope.READ.getName().toLowerCase());
+    private static Scope instance(String name){
+        for(Scope item : values()){
+            if(Objects.equals(item.getName(),name)){
+                return item;
+            }
+        }
+        return null;
     }
 }

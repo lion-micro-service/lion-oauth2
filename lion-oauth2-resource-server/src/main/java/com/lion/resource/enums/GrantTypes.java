@@ -49,7 +49,23 @@ public enum GrantTypes implements IEnum {
     }
 
     @JsonCreator
-    public static GrantTypes instance(String name){
+    public static GrantTypes instance(Object value){
+        if (value instanceof Integer) {
+            return instance((Integer) value);
+        }
+        return instance(String.valueOf(value));
+    }
+
+    private static GrantTypes instance(Integer key){
+        for(GrantTypes item : values()){
+            if (item.getKey()==key){
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private static GrantTypes instance(String name){
         for(GrantTypes item : values()){
             if(Objects.equals(item.getName(),name)){
                 return item;
