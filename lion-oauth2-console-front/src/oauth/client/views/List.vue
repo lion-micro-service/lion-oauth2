@@ -13,7 +13,7 @@
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
-                            <a-button style="margin-left: 5px;" type="primary" icon="search"  @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
+                            <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')" type="primary" icon="search"  @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
                             <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_ADD')" type="primary" icon="file-add" @click="add()">新增</a-button>
                             <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_DELETE')" type="danger" icon="delete"  @click="del(null)">删除</a-button>
                         </a-form-item>
@@ -22,7 +22,7 @@
             </a-form-model>
         </a-card>
 
-        <a-card class="card" :bordered="false">
+        <a-card v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')" class="card" :bordered="false">
             <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
                 <span slot="action" slot-scope="text, record">
                     <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_UPDATE')" icon="edit" size="small" @click="edit(record.id)">修改</a-button>
@@ -99,6 +99,9 @@
          * 查询
          */
         private search():void{
+            if (!this.getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')){
+                return;
+            }
             this.loading=true;
             axios.get("/oauth/client/console/list",{params:this.searchModel})
                 .then((data)=>{
