@@ -1,5 +1,0 @@
-#持久化枚举到数据库（用于前端页面下拉框显示）
-lion:
-  enums:
-    - com.lion.resource.enums.Scope
-    - com.lion.resource.enums.GrantTypes
