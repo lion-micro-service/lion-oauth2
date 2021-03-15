@@ -6,15 +6,15 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 172.16.30.100:8848
+        server-addr: 172.16.30.130:8848
         file-extension: yaml
-        namespace: 7a0bcf1f-e5b7-4f63-aefa-cb86df8c79eb
+        namespace: 7d03f927-32d1-4fa3-810d-9a5311ec5bf1
         group: @project.version@
         extension-configs:
           - data-id: lion-common.${spring.cloud.nacos.config.file-extension}
             refresh: true
             group: GLOBAL_GROUP
-          - data-id: lion-datasource-mysql-common.${spring.cloud.nacos.config.file-extension}
+          - data-id: lion-datasource-common.${spring.cloud.nacos.config.file-extension}
             refresh: true
             group: GLOBAL_GROUP
           - data-id: lion-jpa-common.${spring.cloud.nacos.config.file-extension}
