@@ -4,6 +4,7 @@ spring:
   application:
     name: @project.artifactId@
   cloud:
+
     nacos:
       config:
         server-addr: 172.16.30.130:8848
