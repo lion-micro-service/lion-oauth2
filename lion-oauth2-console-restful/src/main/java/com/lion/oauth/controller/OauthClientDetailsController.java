@@ -30,7 +30,7 @@ import java.util.List;
  * @create: 2020-10-02 22:08
  **/
 @RestController
-@RequestMapping("/oauth/client/console")
+@RequestMapping("/client/console")
 @Api(tags = {"oauth2客户端管理"})
 public class OauthClientDetailsController extends BaseControllerImpl implements BaseController {
 
