@@ -1,5 +1,6 @@
 package com.lion.resource.enums;
 
+import cn.hutool.core.util.NumberUtil;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.lion.core.IEnum;
 
@@ -51,8 +52,11 @@ public enum Scope implements IEnum {
 
     @JsonCreator
     public static Scope instance(Object value){
-        if (value instanceof Integer) {
-            return instance((Integer) value);
+        if (Objects.isNull(value)){
+            return null;
+        }
+        if (NumberUtil.isInteger(String.valueOf(value))) {
+            return instance(Integer.valueOf(String.valueOf(value)));
         }
         return instance(String.valueOf(value));
     }
