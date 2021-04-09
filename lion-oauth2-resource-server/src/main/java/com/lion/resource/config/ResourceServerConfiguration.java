@@ -79,15 +79,19 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
+        authorizationIgnoreProperties.getIgnoreUrl().add("/actuator/**");
+        authorizationIgnoreProperties.getIgnoreUrl().add("/webjars/**");
+        authorizationIgnoreProperties.getIgnoreUrl().add("/resources/**");
+        authorizationIgnoreProperties.getIgnoreUrl().add("/swagger-resources/**");
+        authorizationIgnoreProperties.getIgnoreUrl().add("/v2/**");
+        authorizationIgnoreProperties.getIgnoreUrl().add("/v3/**");
+        authorizationIgnoreProperties.getIgnoreUrl().add("/swagger-ui/**");
+        authorizationIgnoreProperties.getIgnoreUrl().add("/favicon.ico/**");
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry _http = http.addFilterAfter(new AuthorizationIgnoreRemoveHeaderFilter(authorizationIgnoreProperties), LogoutFilter.class)
                 .csrf()
                 .disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-                .authorizeRequests()
-                .antMatchers("/actuator/**","/webjars/**","/resources/**","/swagger-resources/**","/v2/**","/v3/**","/swagger-ui/**", "/favicon.ico")
-                .permitAll()
             .and()
                 .authorizeRequests()
                 .antMatchers(authorizationIgnoreProperties.getIgnoreUrl().toArray(new String[]{}))

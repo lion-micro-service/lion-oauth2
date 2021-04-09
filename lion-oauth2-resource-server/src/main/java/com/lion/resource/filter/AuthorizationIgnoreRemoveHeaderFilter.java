@@ -28,7 +28,7 @@ public class AuthorizationIgnoreRemoveHeaderFilter implements Filter  {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String uri = httpServletRequest.getRequestURI();
-        if (authorizationIgnoreProperties.getIgnoreUrl().contains(uri)){
+        if (authorizationIgnoreProperties.getIgnoreUrl().contains("/**") || authorizationIgnoreProperties.getIgnoreUrl().contains(uri)){
             //假装从header删除Authorization
             HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper((HttpServletRequest) servletRequest) {
                 @Override
