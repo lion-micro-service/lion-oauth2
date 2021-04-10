@@ -46,14 +46,14 @@ public class LionTokenServices extends DefaultTokenServices  {
         super.setClientDetailsService(new JdbcClientDetailsService(dataSource));
     }
 
-    @Override
-    public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
-        OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);
-        if (Objects.nonNull(existingAccessToken)){
-            tokenStore.removeAccessToken(existingAccessToken);
-        }
-        return super.createAccessToken(authentication);
-    }
+//    @Override
+//    public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
+//        OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);
+//        if (Objects.nonNull(existingAccessToken)){
+//            tokenStore.removeAccessToken(existingAccessToken);
+//        }
+//        return super.createAccessToken(authentication);
+//    }
 
     /**
      * 获取token有效期

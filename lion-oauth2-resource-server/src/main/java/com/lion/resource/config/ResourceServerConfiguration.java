@@ -86,7 +86,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         authorizationIgnoreProperties.getIgnoreUrl().add("/v2/**");
         authorizationIgnoreProperties.getIgnoreUrl().add("/v3/**");
         authorizationIgnoreProperties.getIgnoreUrl().add("/swagger-ui/**");
-        authorizationIgnoreProperties.getIgnoreUrl().add("/favicon.ico/**");
+        authorizationIgnoreProperties.getIgnoreUrl().add("/favicon.ico");
+        authorizationIgnoreProperties.getIgnoreUrl().add("/oauth/**");
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry _http = http.addFilterAfter(new AuthorizationIgnoreRemoveHeaderFilter(authorizationIgnoreProperties), LogoutFilter.class)
                 .csrf()
                 .disable()
