@@ -1,5 +1,5 @@
 {
-  "name": "@lion/lion-oauth2-console-front",
+  "name": "@lion/lion-oauth2-console-frontend",
   "version": "1.0.0",
   "description": "common后台管理前端",
   "private": false,
@@ -9,10 +9,10 @@
     "lion-serve": "vue-cli-service lion-serve --mode test"
   },
   "dependencies": {
-    "@lion/lion-front-core": "^1.0.0"
+    "@lion/lion-frontend-core": "^1.0.0"
   },
   "devDependencies": {
-    "@lion/lion-front-devDependencies": "^1.0.0",
+    "@lion/lion-frontend-devDependencies": "^1.0.0",
     "@vue/cli-plugin-typescript": "^4.5.4"
   },
   "publishConfig": {
@@ -20,7 +20,7 @@
   },
   "vuePlugins": {
     "service": [
-      "./node_modules/@lion/lion-front-core/src/plugins/vue-cli-plugin-lion-serve.js"
+      "./node_modules/@lion/lion-frontend-core/src/plugins/vue-cli-plugin-lion-serve.js"
     ]
   }
 }
