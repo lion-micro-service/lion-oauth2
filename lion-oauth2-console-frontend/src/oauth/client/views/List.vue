@@ -37,11 +37,11 @@
 
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
-    import axios from "@lion/lion-front-core/src/network/axios";
+    import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message } from 'ant-design-vue';
     import addOrUpdate from "@/oauth/client/components/addOrUpdate.vue";
     import qs from "qs";
-    import authority from "@lion/lion-front-core/src/security/authority";
+    import authority from "@lion/lion-frontend-core/src/security/authority";
     @Component({components:{addOrUpdate}})
     export default class list extends Vue{
         //查询数据模型

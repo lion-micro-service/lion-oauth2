@@ -1,4 +1,4 @@
-const pages = require('@lion/lion-front-core/src/webpack/vue.config');
+const pages = require('@lion/lion-frontend-core/src/webpack/vue.config');
 const webpack=require('webpack');
 const CompressionPlugin = require("compression-webpack-plugin");
 const TerserPlugin = require('terser-webpack-plugin')
