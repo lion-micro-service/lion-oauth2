@@ -1,13 +1,10 @@
 package com.lion.resource.filter;
 
-import com.lion.resource.config.properties.AuthorizationIgnoreProperties;
-import org.springframework.beans.factory.InitializingBean;
+import com.lion.resource.configuration.properties.AuthorizationIgnoreProperties;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.util.Enumeration;
 

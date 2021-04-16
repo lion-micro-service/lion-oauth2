@@ -1,8 +1,8 @@
-package com.lion.resource.config;
+package com.lion.resource.configuration;
 
 import cn.hutool.core.util.ReUtil;
 import com.lion.annotation.AuthorizationIgnore;
-import com.lion.resource.config.properties.AuthorizationIgnoreProperties;
+import com.lion.resource.configuration.properties.AuthorizationIgnoreProperties;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

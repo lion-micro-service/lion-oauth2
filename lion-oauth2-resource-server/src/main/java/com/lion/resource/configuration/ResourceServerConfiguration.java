@@ -1,8 +1,8 @@
-package com.lion.resource.config;
+package com.lion.resource.configuration;
 
 import com.lion.config.RestTemplateConfiguration;
-import com.lion.resource.config.properties.AuthorizationIgnoreProperties;
-import com.lion.resource.config.properties.OauthClientScopeProperties;
+import com.lion.resource.configuration.properties.AuthorizationIgnoreProperties;
+import com.lion.resource.configuration.properties.OauthClientScopeProperties;
 import com.lion.resource.enums.Scope;
 import com.lion.resource.filter.AuthorizationIgnoreRemoveHeaderFilter;
 import com.lion.resource.handler.LionAccessDeniedHandler;
@@ -14,20 +14,25 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 /**
@@ -114,8 +119,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated();
-
-
     }
 
 
