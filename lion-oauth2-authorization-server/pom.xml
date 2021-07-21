@@ -12,6 +12,8 @@
     <packaging>jar</packaging>
 
     <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <lion-core.version>1.0.0-SNAPSHOT</lion-core.version>
         <lion-expose-starter.version>1.0.0-SNAPSHOT</lion-expose-starter.version>
     </properties>
