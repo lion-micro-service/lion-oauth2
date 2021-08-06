@@ -5,8 +5,13 @@ import com.lion.core.ResultData;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.Objects;
 
 /**
  * @description: 自定义错误信息
@@ -16,10 +21,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class LionWebResponseExceptionTranslator implements WebResponseExceptionTranslator {
     @Override
-    public ResponseEntity<ResultData> translate(Exception e) throws Exception {
+    public ResponseEntity<Object> translate(Exception e) throws Exception {
         HttpHeaders headers = new HttpHeaders();
+        if (e instanceof InvalidTokenException){
+            InvalidTokenException exception = (InvalidTokenException) e;
+            if (Objects.equals(exception.getMessage(),"Token was not recognised") || Objects.equals(exception.getMessage(),"Token has expired")){
+                return new ResponseEntity<Object>(Collections.EMPTY_MAP, headers, HttpStatus.OK);
+            }
+        }
         ResultData resultData = ExceptionData.instance(e);
-        ResponseEntity<ResultData> response = new ResponseEntity<ResultData>(resultData, headers, HttpStatus.OK);
+        ResponseEntity<Object> response = new ResponseEntity<Object>(resultData, headers, HttpStatus.OK);
         return response;
     }
 }
