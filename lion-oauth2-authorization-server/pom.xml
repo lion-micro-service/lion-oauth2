@@ -99,6 +99,10 @@
             <artifactId>lion-expose-starter</artifactId>
             <version>${lion-expose-starter.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
