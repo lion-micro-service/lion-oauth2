@@ -24,7 +24,7 @@ import javax.validation.constraints.Pattern;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "oauth_client_details")
-@DynamicUpdate
+
 @DynamicInsert
 @Data
 @ApiModel(description = "oauth2客户端信息表")
