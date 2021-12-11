@@ -1,6 +1,7 @@
 package com.lion.resource.configuration;
 
 import com.lion.config.RestTemplateConfiguration;
+import com.lion.resource.authentication.LionBearerTokenExtractor;
 import com.lion.resource.configuration.properties.AuthorizationIgnoreProperties;
 import com.lion.resource.configuration.properties.OauthClientScopeProperties;
 import com.lion.resource.enums.Scope;
@@ -28,6 +29,8 @@ import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -78,7 +81,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .tokenServices(getResourceServerTokenServices())
                 .stateless(true)
                 .accessDeniedHandler(accessDeniedHandler)
-                .authenticationEntryPoint(authenticationEntryPoint);
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .tokenExtractor(new LionBearerTokenExtractor(authorizationIgnoreProperties));
 
     }
 
@@ -93,8 +97,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         authorizationIgnoreProperties.getIgnoreUrl().add("/swagger-ui/**");
         authorizationIgnoreProperties.getIgnoreUrl().add("/favicon.ico");
         authorizationIgnoreProperties.getIgnoreUrl().add("/oauth/**");
-        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry _http = http.addFilterAfter(new AuthorizationIgnoreRemoveHeaderFilter(authorizationIgnoreProperties), LogoutFilter.class)
-                .csrf()
+
+        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry _http = http.csrf()
                 .disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -102,12 +106,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 .antMatchers(authorizationIgnoreProperties.getIgnoreUrl().toArray(new String[]{}))
                 .permitAll();
-            //动态从配置文件读取配置配置权限(必须优先与以下配置设置否则会被以下规则优先拦截会导致该配置无效)
-            if (Objects.nonNull(oauthClientScopeProperties.getScopes()) && oauthClientScopeProperties.getScopes().size()>0){
-                oauthClientScopeProperties.getScopes().forEach(scopes -> {
-                    _http.antMatchers(scopes.getUrl().toArray(new String[]{})).access("#oauth2.hasScope('"+scopes.getScope()+"')");
-                });
-            }
+        //动态从配置文件读取配置配置权限(必须优先与以下配置设置否则会被以下规则优先拦截会导致该配置无效)
+        if (Objects.nonNull(oauthClientScopeProperties.getScopes()) && oauthClientScopeProperties.getScopes().size()>0){
+            oauthClientScopeProperties.getScopes().forEach(scopes -> {
+                _http.antMatchers(scopes.getUrl().toArray(new String[]{})).access("#oauth2.hasScope('"+scopes.getScope()+"')");
+            });
+        }
         _http.and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET).access( "#oauth2.hasScope('"+Scope.READ.getName().toLowerCase()+"')")

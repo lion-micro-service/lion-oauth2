@@ -1,6 +1,7 @@
 package com.lion.resource.filter;
 
 import com.lion.resource.configuration.properties.AuthorizationIgnoreProperties;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +14,12 @@ import java.util.Enumeration;
  * @author: mr.liu
  * @create: 2020-10-07 20:31
  **/
+@Deprecated
 public class AuthorizationIgnoreRemoveHeaderFilter implements Filter  {
 
     private AuthorizationIgnoreProperties authorizationIgnoreProperties;
+
+    private static final String AUTHORIZATION = "authorization";
 
     public AuthorizationIgnoreRemoveHeaderFilter(AuthorizationIgnoreProperties authorizationIgnoreProperties) {
         this.authorizationIgnoreProperties = authorizationIgnoreProperties;
@@ -30,20 +34,26 @@ public class AuthorizationIgnoreRemoveHeaderFilter implements Filter  {
             HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper((HttpServletRequest) servletRequest) {
                 @Override
                 public String getHeader(String name) {
-                    if("Authorization".equals(name) ){
-                        return "";
+                    if(StringUtils.hasText(name) && AUTHORIZATION.equals(name.toLowerCase()) ){
+                        return null;
                     }
                     return super.getHeader(name);
                 }
 
                 @Override
                 public Enumeration<String> getHeaders(String name) {
-                    Enumeration<String> headers = super.getHeaders(name);
-                    if("Authorization".equals(name) ){
-                        while (headers.hasMoreElements()) {
-                            String value = headers.nextElement();
-                        }
-                        return headers;
+                    if(StringUtils.hasText(name) && AUTHORIZATION.equals(name.toLowerCase()) ){
+                        return new Enumeration() {
+                            @Override
+                            public boolean hasMoreElements() {
+                                return false;
+                            }
+
+                            @Override
+                            public Object nextElement() {
+                                return null;
+                            }
+                        };
                     }
                     return super.getHeaders(name);
                 }
