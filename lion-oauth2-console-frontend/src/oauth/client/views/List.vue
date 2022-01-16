@@ -4,7 +4,7 @@
             <a-form layout="inline" ref="form" :model="searchModel" >
                 <a-row>
                     <a-col :span="6">
-                        <a-form-item label="客户端id" prop="clientId" ref="clientId" >
+                        <a-form-item label="客户端id" name="clientId" ref="clientId" >
                             <a-input placeholder="请输入客户端id" v-model:value="searchModel.clientId" />
                         </a-form-item>
                     </a-col>

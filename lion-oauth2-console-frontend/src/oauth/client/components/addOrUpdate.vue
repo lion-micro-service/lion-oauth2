@@ -3,26 +3,26 @@
         <a-form layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
             <a-row>
                 <a-col :span="12">
-                    <a-form-item label="客户端id" prop="clientId" ref="clientId">
+                    <a-form-item label="客户端id" name="clientId" ref="clientId">
                         <a-input placeholder="请输入客户端id" v-model:value="addOrUpdateModel.clientId" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
-                    <a-form-item label="客户端密钥" prop="clientSecretPlaintext" ref="clientSecretPlaintext">
+                    <a-form-item label="客户端密钥" name="clientSecretPlaintext" ref="clientSecretPlaintext">
                         <a-input placeholder="请输入客户端密钥" v-model:value="addOrUpdateModel.clientSecretPlaintext" />
                     </a-form-item>
                 </a-col>
             </a-row>
             <a-row>
                 <a-col :span="24">
-                    <a-form-item label="token有效期" prop="accessTokenValidity" ref="accessTokenValidity">
+                    <a-form-item label="token有效期" name="accessTokenValidity" ref="accessTokenValidity">
                         <a-input-number placeholder="请输入token有效期" v-model:value="addOrUpdateModel.accessTokenValidity"/>
                     </a-form-item>
                 </a-col>
             </a-row>
             <a-row>
                 <a-col :span="24">
-                    <a-form-item label="授权方式" prop="grantTypes" ref="grantTypes">
+                    <a-form-item label="授权方式" name="grantTypes" ref="grantTypes">
                         <a-select  :default-value="addOrUpdateModel.grantTypes" @change="grantTypesChange" mode="multiple" style="width: 100%" placeholder="请选择授权方式" >
                             <a-select-option :key="grantTypes.name.toLowerCase()" v-for="(grantTypes) in authorizedGrantTypes">
                                 {{ grantTypes.name.toLowerCase()}}
@@ -33,7 +33,7 @@
             </a-row>
             <a-row>
                 <a-col :span="24">
-                    <a-form-item label="权限" prop="scopes" ref="scopes">
+                    <a-form-item label="权限" name="scopes" ref="scopes">
                         <a-select :default-value="addOrUpdateModel.scopes" @change="scopesChange" mode="tags" placeholder="请选择权限" style="width: 100%" :token-separators="[',']">
                             <a-select-option :key="scope.name.toLowerCase()" v-for="(scope) in scopes">
                                 {{ scope.name.toLowerCase()}}
@@ -44,7 +44,7 @@
             </a-row>
             <a-row>
                 <a-col :span="24">
-                    <a-form-item label="资源" prop="resourceIds" ref="resourceIds">
+                    <a-form-item label="资源" name="resourceIds" ref="resourceIds">
                         <a-textarea  placeholder="请输入资源(逗号隔开)" :rows="6" v-model:value="addOrUpdateModel.resourceIds"/>
                     </a-form-item>
                 </a-col>
