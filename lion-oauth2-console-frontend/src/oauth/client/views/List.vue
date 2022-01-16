@@ -1,12 +1,12 @@
 <template>
     <div>
         <a-card class="card" style="border-bottom-width: 5px;">
-            <a-form-model layout="inline" ref="form" :model="searchModel" >
+            <a-form layout="inline" ref="form" :model="searchModel" >
                 <a-row>
                     <a-col :span="6">
-                        <a-form-model-item label="客户端id" prop="clientId" ref="clientId" >
-                            <a-input placeholder="请输入客户端id" v-model="searchModel.clientId" />
-                        </a-form-model-item>
+                        <a-form-item label="客户端id" prop="clientId" ref="clientId" >
+                            <a-input placeholder="请输入客户端id" v-model:value="searchModel.clientId" />
+                        </a-form-item>
                     </a-col>
                 </a-row>
 
@@ -19,11 +19,11 @@
                         </a-form-item>
                     </a-col>
                 </a-row>
-            </a-form-model>
+            </a-form>
         </a-card>
 
         <a-card v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')" class="card" :bordered="false">
-            <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
+            <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="listData" :loading="loading" :pagination="paginationProps">
                 <span slot="action" slot-scope="text, record">
                     <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_UPDATE')" icon="edit" size="small" @click="edit(record.id)">修改</a-button>
                     <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_DELETE')" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
@@ -36,13 +36,15 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Options, Vue} from 'vue-property-decorator';
     import axios from "@lion/lion-frontend-core/src/network/axios";
-    import { message } from 'ant-design-vue';
+    import { message,Modal } from 'ant-design-vue';
     import addOrUpdate from "@/oauth/client/components/addOrUpdate.vue";
     import qs from "qs";
     import authority from "@lion/lion-frontend-core/src/security/authority";
-    @Component({components:{addOrUpdate}})
+    @Options({
+      components:{addOrUpdate}
+    })
     export default class list extends Vue{
         //查询数据模型
         private searchModel:any={
@@ -52,7 +54,7 @@
         //列表复选框选中的值
         private selectedRowKeys:Array<number> = [];
         //列表数据源
-        private data:Array<any> = [];
+        private listData:Array<any> = [];
         //列表是否加载中（转圈圈）
         private loading:boolean=false;
         //列表表头定义
@@ -105,7 +107,7 @@
             this.loading=true;
             axios.get("/lion-oauth2-console-restful/client/console/list",{params:this.searchModel})
                 .then((data)=>{
-                    this.data=data.data;
+                    this.listData=data.data;
                     this.paginationProps.total=Number((Object(data)).totalElements);
                     this.paginationProps.current=(Object(data)).pageNumber;
                     this.paginationProps.pageSize=(Object(data)).pageSize;
@@ -120,7 +122,7 @@
         /**
          * 组件挂载后触发事件
          */
-        private mounted() {
+        public mounted() {
             this.search();
         }
 
@@ -156,7 +158,7 @@
                     id = this.selectedRowKeys;
                 }
             }
-            this.$confirm({
+            Modal.confirm({
                 title: '是否要删除该数据?',
                 // content: '',
                 okText: 'Yes',

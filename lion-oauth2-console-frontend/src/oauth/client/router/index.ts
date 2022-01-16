@@ -1,12 +1,8 @@
-import Vue from 'vue';
-import VueRouter, {RouteConfig} from 'vue-router';
-
-Vue.use(VueRouter);
-
-const routes : Array<RouteConfig> = [{
-    path:'/oauth/client',
-    name:'参数',
-    redirect:'/oauth/client/list'
+import { createRouter,createWebHashHistory}  from 'vue-router'
+const routes : Array<any> =[{
+        path:'/',
+        name:'参数',
+        redirect:'/oauth/client/list'
     },{
         path:'/oauth/client/list',
         name:'参数列表',
@@ -14,11 +10,8 @@ const routes : Array<RouteConfig> = [{
         meta: {keepAlive: true }
     }
 ];
-
-const route = new VueRouter({
-    mode:'history',
-    base:process.env.BASE_URL,
+const route = createRouter({
+    history: createWebHashHistory(),
     routes
 })
-
 export default route

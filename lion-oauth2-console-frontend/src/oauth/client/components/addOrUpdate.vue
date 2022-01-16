@@ -1,63 +1,65 @@
 <template>
-    <a-modal destroyOnClose v-model="addOrUpdateModal" width="800px" title="添加/修改客户端" centered @ok="addOrUpdate" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
-        <a-form-model layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
+    <a-modal destroyOnClose v-model:value="addOrUpdateModal" width="800px" title="添加/修改客户端" centered @ok="addOrUpdate" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
+        <a-form layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
             <a-row>
                 <a-col :span="12">
-                    <a-form-model-item label="客户端id" prop="clientId" ref="clientId">
-                        <a-input placeholder="请输入客户端id" v-model="addOrUpdateModel.clientId" />
-                    </a-form-model-item>
+                    <a-form-item label="客户端id" prop="clientId" ref="clientId">
+                        <a-input placeholder="请输入客户端id" v-model:value="addOrUpdateModel.clientId" />
+                    </a-form-item>
                 </a-col>
                 <a-col :span="12">
-                    <a-form-model-item label="客户端密钥" prop="clientSecretPlaintext" ref="clientSecretPlaintext">
-                        <a-input placeholder="请输入客户端密钥" v-model="addOrUpdateModel.clientSecretPlaintext" />
-                    </a-form-model-item>
+                    <a-form-item label="客户端密钥" prop="clientSecretPlaintext" ref="clientSecretPlaintext">
+                        <a-input placeholder="请输入客户端密钥" v-model:value="addOrUpdateModel.clientSecretPlaintext" />
+                    </a-form-item>
                 </a-col>
             </a-row>
             <a-row>
                 <a-col :span="24">
-                    <a-form-model-item label="token有效期" prop="accessTokenValidity" ref="accessTokenValidity">
-                        <a-input-number placeholder="请输入token有效期" v-model="addOrUpdateModel.accessTokenValidity"/>
-                    </a-form-model-item>
+                    <a-form-item label="token有效期" prop="accessTokenValidity" ref="accessTokenValidity">
+                        <a-input-number placeholder="请输入token有效期" v-model:value="addOrUpdateModel.accessTokenValidity"/>
+                    </a-form-item>
                 </a-col>
             </a-row>
             <a-row>
                 <a-col :span="24">
-                    <a-form-model-item label="授权方式" prop="grantTypes" ref="grantTypes">
+                    <a-form-item label="授权方式" prop="grantTypes" ref="grantTypes">
                         <a-select  :default-value="addOrUpdateModel.grantTypes" @change="grantTypesChange" mode="multiple" style="width: 100%" placeholder="请选择授权方式" >
                             <a-select-option :key="grantTypes.name.toLowerCase()" v-for="(grantTypes) in authorizedGrantTypes">
                                 {{ grantTypes.name.toLowerCase()}}
                             </a-select-option>
                         </a-select>
-                    </a-form-model-item>
+                    </a-form-item>
                 </a-col>
             </a-row>
             <a-row>
                 <a-col :span="24">
-                    <a-form-model-item label="权限" prop="scopes" ref="scopes">
+                    <a-form-item label="权限" prop="scopes" ref="scopes">
                         <a-select :default-value="addOrUpdateModel.scopes" @change="scopesChange" mode="tags" placeholder="请选择权限" style="width: 100%" :token-separators="[',']">
                             <a-select-option :key="scope.name.toLowerCase()" v-for="(scope) in scopes">
                                 {{ scope.name.toLowerCase()}}
                             </a-select-option>
                         </a-select>
-                    </a-form-model-item>
+                    </a-form-item>
                 </a-col>
             </a-row>
             <a-row>
                 <a-col :span="24">
-                    <a-form-model-item label="资源" prop="resourceIds" ref="resourceIds">
-                        <a-textarea  placeholder="请输入资源(逗号隔开)" :rows="6" v-model="addOrUpdateModel.resourceIds"/>
-                    </a-form-model-item>
+                    <a-form-item label="资源" prop="resourceIds" ref="resourceIds">
+                        <a-textarea  placeholder="请输入资源(逗号隔开)" :rows="6" v-model:value="addOrUpdateModel.resourceIds"/>
+                    </a-form-item>
                 </a-col>
             </a-row>
-        </a-form-model>
+        </a-form>
     </a-modal>
 </template>
 
 <script lang="ts">
-    import {Component,  Vue} from 'vue-property-decorator';
+    import {Options,  Vue} from 'vue-property-decorator';
     import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message } from 'ant-design-vue';
-    @Component({})
+    @Options({
+      components:{}
+    })
     export default class addOrUpdate extends Vue{
         //点击阴影层是否关闭窗口
         private maskClosable:boolean=false;
