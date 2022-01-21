@@ -23,7 +23,7 @@
     "compression-webpack-plugin": "6.1.1",
     "glob": "7.2.0",
     "less": "4.1.2",
-    "less-loader": "10.2.0",
+    "less-loader": "7.3.0",
     "terser-webpack-plugin": "4.2.3",
     "typescript": "4.5.4",
     "vue-class-component": "8.0.0-rc.1",
