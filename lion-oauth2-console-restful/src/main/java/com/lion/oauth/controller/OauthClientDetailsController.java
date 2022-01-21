@@ -79,12 +79,14 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
 
     @ApiOperation(value = "检查客户端id是否存在",notes = "检查客户端id是否存在")
     @GetMapping("/check/clientId/exist")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Boolean> checkClientIdExist(@NotBlank(message = "客户端id不能为空")String clientId,@ApiParam(value = "修改时需要传,新增时不需要传") Long id){
         return ResultData.instance().setData(oauthClientDetailsService.checkClientIdIsExist(clientId, id));
     }
 
     @GetMapping("/details")
     @ApiOperation(value = "获取详情",notes = "获取详情")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<OauthClientDetails> details(@NotNull(message = "id不能为空") Long id){
         OauthClientDetails oauthClientDetails = oauthClientDetailsService.findById(id);
         return ResultData.instance().setData(oauthClientDetails);

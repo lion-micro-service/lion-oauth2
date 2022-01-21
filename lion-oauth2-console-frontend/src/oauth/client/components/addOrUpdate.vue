@@ -1,6 +1,6 @@
 <template>
-    <a-modal destroyOnClose v-model:value="addOrUpdateModal" width="800px" title="添加/修改客户端" centered @ok="addOrUpdate" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
-        <a-form layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
+    <a-modal v-model:visible="addOrUpdateModal" width="800px" title="添加/修改客户端" @cancel="cancel" centered @ok="addOrUpdate" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
+        <a-form ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
             <a-row>
                 <a-col :span="12">
                     <a-form-item label="客户端id" name="clientId" ref="clientId">
@@ -216,6 +216,15 @@
             this.addOrUpdateModel={};
             (this.$parent as any).search();
         }
+
+      /**
+       * 关闭弹窗时清空数据，以免数据污染
+       * @private
+       */
+      private cancel():void {
+        (this.$refs.addOrUpdateForm as any).clearValidate();
+        (this.$refs.addOrUpdateForm as any).resetFields();
+      }
 
         /**
          * 授权方式改变事件

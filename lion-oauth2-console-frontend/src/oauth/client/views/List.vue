@@ -1,7 +1,7 @@
 <template>
     <div>
         <a-card class="card" style="border-bottom-width: 5px;">
-            <a-form layout="inline" ref="form" :model="searchModel" >
+            <a-form ref="form" :model="searchModel" >
                 <a-row>
                     <a-col :span="6">
                         <a-form-item label="客户端id" name="clientId" ref="clientId" >
@@ -13,9 +13,20 @@
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
-                            <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')" type="primary" icon="search"  @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
-                            <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_ADD')" type="primary" icon="file-add" @click="add()">新增</a-button>
-                            <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_DELETE')" type="danger" icon="delete"  @click="del(null)">删除</a-button>
+                          <a-space :size="size">
+                            <a-button type="primary" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')" @click="()=>{this.searchModel.pageNumber =1;search()}">
+                              <template #icon><SearchOutlined /></template>
+                              查询
+                            </a-button>
+                            <a-button type="primary" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_ADD')" @click="add()">
+                              <template #icon><PlusOutlined /></template>
+                              添加
+                            </a-button>
+                            <a-button type="danger" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_DELETE')" @click="del(null)">
+                              <template #icon><DeleteOutlined /></template>
+                              删除
+                            </a-button>
+                          </a-space>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -24,10 +35,20 @@
 
         <a-card v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')" class="card" :bordered="false">
             <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="listData" :loading="loading" :pagination="paginationProps">
-                <span slot="action" slot-scope="text, record">
-                    <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_UPDATE')" icon="edit" size="small" @click="edit(record.id)">修改</a-button>
-                    <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_DELETE')" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
-                </span>
+              <template #bodyCell="{ column ,record}">
+                <template v-if="column.key === 'operation'">
+                  <a-space :size="size">
+                    <a-button size="small" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_UPDATE')" @click="edit(record.id)">
+                      <template #icon><EditOutlined /></template>
+                      修改
+                    </a-button>
+                    <a-button size="small" type="danger" v-if="getAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_DELETE')" @click="del(record.id)">
+                      <template #icon><DeleteOutlined /></template>
+                      删除
+                    </a-button>
+                  </a-space>
+                </template>
+              </template>
             </a-table>
         </a-card>
 
@@ -37,15 +58,18 @@
 
 <script lang="ts">
     import {Options, Vue} from 'vue-property-decorator';
+    import {ref} from "vue";
+    import { SearchOutlined,PlusOutlined,DeleteOutlined,EditOutlined,SecurityScanOutlined,UserOutlined } from '@ant-design/icons-vue';
     import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message,Modal } from 'ant-design-vue';
     import addOrUpdate from "@/oauth/client/components/addOrUpdate.vue";
     import qs from "qs";
     import authority from "@lion/lion-frontend-core/src/security/authority";
     @Options({
-      components:{addOrUpdate}
+      components:{addOrUpdate,SearchOutlined,PlusOutlined,DeleteOutlined,EditOutlined,SecurityScanOutlined,UserOutlined}
     })
     export default class list extends Vue{
+      private size:any = ref(5);
         //查询数据模型
         private searchModel:any={
             pageNumber:1,
@@ -65,7 +89,7 @@
             { title: '授权方式', dataIndex: 'authorizedGrantTypes', key: 'authorizedGrantTypes',width: 300},
             { title: '权限', dataIndex: 'scope', key: 'scope',width: 300},
             { title: 'token有效期（秒）', dataIndex: 'accessTokenValidity', key: 'accessTokenValidity',width: 180},
-            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 200,}
+            { title: '操作', key: 'operation', width: 200,}
         ];
         //列表分页参数定义
         private paginationProps:any={
@@ -209,7 +233,10 @@
     .ant-form-item{
         width: 100%;
     }
-    .ant-row >>> .ant-form-item-control-wrapper{
+    .ant-row >>> .ant-form-item-control{
         width: calc(100% - 80px);
+    }
+    .ant-card >>> .ant-card-body{
+      padding-bottom: 0px;
     }
 </style>
