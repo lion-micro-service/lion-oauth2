@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @description: oauth客户端控制层
@@ -88,7 +89,11 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
     @ApiOperation(value = "获取详情",notes = "获取详情")
     @PreAuthorize("isAuthenticated()")
     public IResultData<OauthClientDetails> details(@NotNull(message = "id不能为空") Long id){
-        OauthClientDetails oauthClientDetails = oauthClientDetailsService.findById(id);
+        Optional<OauthClientDetails> optional = oauthClientDetailsService.findById(id);
+        if (!optional.isPresent()) {
+            return ResultData.instance();
+        }
+        OauthClientDetails oauthClientDetails = optional.get();
         return ResultData.instance().setData(oauthClientDetails);
     }
 

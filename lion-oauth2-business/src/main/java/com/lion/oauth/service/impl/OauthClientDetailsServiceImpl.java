@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @description: OauthClientDetailsServiceImpl
@@ -23,11 +24,11 @@ public class OauthClientDetailsServiceImpl extends BaseServiceImpl<OauthClientDe
 
     @Override
     public Boolean checkClientIdIsExist(String clientId, Long id) {
-        OauthClientDetails oauthClientDetails = oauthClientDetailsDao.findFirstByClientId(clientId);
-        if (Objects.isNull(oauthClientDetails)){
+        Optional<OauthClientDetails> optional = oauthClientDetailsDao.findFirstByClientId(clientId);
+        if (!optional.isPresent()){
             return false;
         }
-        if (Objects.nonNull(id) && id.equals(oauthClientDetails.getId())){
+        if (Objects.nonNull(id) && id.equals(optional.get().getId())){
             return false;
         }
         return true;

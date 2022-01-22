@@ -3,6 +3,8 @@ package com.lion.oauth.dao;
 import com.lion.core.persistence.curd.BaseDao;
 import com.lion.oauth.entity.OauthClientDetails;
 
+import java.util.Optional;
+
 /**
  * @description: OauthClientDetailsDao
  * @author: mr.liu
@@ -15,6 +17,6 @@ public interface OauthClientDetailsDao extends BaseDao<OauthClientDetails> {
      * @param clientId
      * @return
      */
-    public OauthClientDetails findFirstByClientId(String clientId);
+    public Optional<OauthClientDetails> findFirstByClientId(String clientId);
 
 }
