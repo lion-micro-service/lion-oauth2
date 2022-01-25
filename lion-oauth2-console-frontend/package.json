@@ -33,7 +33,7 @@
     "webpack": "4.46.0"
   },
   "publishConfig": {
-    "registry": "http://127.0.0.1:9999/repository/hosted-repository-npm/"
+    "registry": "http://npm.nexus.com/repository/hosted-repository-npm/"
   },
   "vuePlugins": {
     "service": [
