@@ -23,7 +23,7 @@
             <a-row>
                 <a-col :span="24">
                     <a-form-item label="授权方式" name="grantTypes" ref="grantTypes">
-                        <a-select  :default-value="addOrUpdateModel.grantTypes" @change="grantTypesChange" mode="multiple" style="width: 100%" placeholder="请选择授权方式" >
+                        <a-select  v-model:value="addOrUpdateModel.grantTypes" @change="grantTypesChange" mode="multiple" style="width: 100%" placeholder="请选择授权方式" >
                             <a-select-option :key="grantTypes.name.toLowerCase()" v-for="(grantTypes) in authorizedGrantTypes">
                                 {{ grantTypes.name.toLowerCase()}}
                             </a-select-option>
@@ -34,8 +34,8 @@
             <a-row>
                 <a-col :span="24">
                     <a-form-item label="权限" name="scopes" ref="scopes">
-                        <a-select :default-value="addOrUpdateModel.scopes" @change="scopesChange" mode="tags" placeholder="请选择权限" style="width: 100%" :token-separators="[',']">
-                            <a-select-option :key="scope.name.toLowerCase()" v-for="(scope) in scopes">
+                        <a-select v-model:value="addOrUpdateModel.scopes" @change="scopesChange" mode="multiple" placeholder="请选择权限" style="width: 100%">
+                            <a-select-option :key="scope.name.toLowerCase()" v-for="(scope) in selectScopes">
                                 {{ scope.name.toLowerCase()}}
                             </a-select-option>
                         </a-select>
@@ -69,15 +69,11 @@
         private addOrUpdateModel:any={};
         //授权方式数据源
         private authorizedGrantTypes:Array<any>=[];
-        //授权方式默认选中数据
-        private grantTypesDefault:Array<string>=[];
         //权限数据源
-        private scopes:Array<any>=[];
-        //权限默认选中数据
-        private scopesDefault:Array<string>=[];
+        private selectScopes:Array<any>=[];
         //校验规则
         private rules:any={
-            clientId:[{required:true,validator:this.checkClientIdIsExist,trigger:'blur'}],
+            clientId:[{required:true,validator:(rule,value)=>{return this.checkClientIdIsExist(rule,value,this)},trigger:'blur'}],
             clientSecretPlaintext:[{required:true,message:"请输入客户端密钥",trigger:'blur'}],
             accessTokenValidity:[{required:true,message:"请输入token有效期",trigger:'blur'}],
         };
@@ -90,63 +86,59 @@
          * @param value
          * @param callback
          */
-        private checkClientIdIsExist(rule :any, value:string, callback:any):void{
-            if (!value || value.trim() === ''){
-                callback(new Error('请输入编码'));
-                return;
-            }else if (value && value.trim() !== ''){
-                axios.get("/lion-oauth2-console-restful/client/console/check/clientId/exist",{params:{"clientId":this.addOrUpdateModel.clientId,"id":this.addOrUpdateModel.id}})
-                    .then((data)=> {
-                        if (Object(data).status !== 200){
-                            callback(new Error('异常错误！请检查'));
-                            return;
-                        }
-                        if (data.data) {
-                            callback(new Error('客户端id已存在'));
-                        }else {
-                            callback();
-                        }
-                    })
-                    .catch(fail => {
-                    })
-                    .finally(()=>{
-                    });
-                return;
-            }
-            callback();
+        private async checkClientIdIsExist(rule :any, value:string, _this:any){
+          let promise:any = null;
+          if (!value || value.trim() === ''){
+            promise = Promise.reject("请输入编码")
+          }else if (value && value.trim() !== ''){
+            await axios.get("/lion-oauth2-console-restful/client/console/check/clientId/exist",{params:{"clientId":_this.addOrUpdateModel.clientId,"id":_this.addOrUpdateModel.id}})
+              .then((data)=> {
+                if (Object(data).status !== 200){
+                  promise = Promise.reject("异常错误！请检查")
+                }
+                if (data.data) {
+                  promise = Promise.reject("客户端id已存在")
+                }else {
+                  promise = Promise.resolve();
+                }
+              })
+              .catch(fail => {
+              })
+              .finally(()=>{
+              });
+          }
+          return promise;
         }
 
         /**
          * 提交数据
          */
         private addOrUpdate():void{
-            (this.$refs.addOrUpdateForm as any).validate((validate: boolean) => {
-                if (validate) {
-                    this.addOrUpdateModel.authorizedGrantTypes=this.addOrUpdateModel.grantTypes.join(",");
-                    this.addOrUpdateModel.scope=this.addOrUpdateModel.scopes.join(",");
-                    if (this.addOrUpdateModel.id){
-                        axios.put("/lion-oauth2-console-restful/client/console/update",this.addOrUpdateModel)
-                            .then((data) =>{
-                                if (Object(data).status === 200){
-                                    message.success(Object(data).message);
-                                    this.success();
-                                }
-                            }).catch((fail)=>{
-                        }).finally(()=>{
-                        })
-                    }else {
-                        axios.post("/lion-oauth2-console-restful/client/console/add",this.addOrUpdateModel)
-                            .then((data) =>{
-                                if (Object(data).status === 200){
-                                    message.success(Object(data).message);
-                                    this.success();
-                                }
-                            }).catch((fail)=>{
-                        }).finally(()=>{
-                        })
+          (this.$refs.addOrUpdateForm as any).validate().then(()=>{
+            this.addOrUpdateModel.authorizedGrantTypes=this.addOrUpdateModel.grantTypes.join(",");
+            this.addOrUpdateModel.scope=this.addOrUpdateModel.scopes.join(",");
+            if (this.addOrUpdateModel.id){
+              axios.put("/lion-oauth2-console-restful/client/console/update",this.addOrUpdateModel)
+                  .then((data) =>{
+                    if (Object(data).status === 200){
+                      message.success(Object(data).message);
+                      this.success();
                     }
-                }
-            });
+                  }).catch((fail)=>{
+              }).finally(()=>{
+              })
+            }else {
+              axios.post("/lion-oauth2-console-restful/client/console/add",this.addOrUpdateModel)
+                  .then((data) =>{
+                    if (Object(data).status === 200){
+                      message.success(Object(data).message);
+                      this.success();
+                    }
+                  }).catch((fail)=>{
+              }).finally(()=>{
+              })
+            }
+          }).catch(fail=>{}).finally(()=>{})
         }
 
 
@@ -176,7 +168,7 @@
         private async getSelectDate(){
             await axios.get("/lion-common-console-restful/enum/console/to/select", {params: {"enumClass": "com.lion.resource.enums.Scope"}})
             .then((data) => {
-                this.scopes = data.data;
+                this.selectScopes = data.data;
             })
             .catch(fail => {
             })
@@ -222,6 +214,7 @@
        * @private
        */
       private cancel():void {
+        this.addOrUpdateModel = {};
         (this.$refs.addOrUpdateForm as any).clearValidate();
         (this.$refs.addOrUpdateForm as any).resetFields();
       }
@@ -252,7 +245,7 @@
     .ant-form-item{
         width: 100%;
     }
-    .ant-row >>> .ant-form-item-control-wrapper{
+    .ant-row >>> .ant-form-item-control{
         width: calc(100% - 100px);
     }
 </style>
