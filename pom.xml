@@ -14,9 +14,9 @@
     <packaging>pom</packaging>
     <properties>
         <starter.version>1.0.0-SNAPSHOT</starter.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <java.version>17</java.version>
+        <maven.compiler.source>${jdk.version}</maven.compiler.source>
+        <maven.compiler.target>${jdk.version}</maven.compiler.target>
+        <java.version>${jdk.version}</java.version>
     </properties>
     <modules>
         <module>lion-oauth2-authorization-server</module>
