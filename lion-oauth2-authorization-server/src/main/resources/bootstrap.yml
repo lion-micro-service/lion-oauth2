@@ -1,8 +1,6 @@
 server:
   port: 0
 spring:
-  main:
-    allow-circular-references: true
   nacos:
 #    host: 172.16.30.100:8848
 #    namespace: 10d8c97e-d556-413f-bbf8-72d1e5b538b0
