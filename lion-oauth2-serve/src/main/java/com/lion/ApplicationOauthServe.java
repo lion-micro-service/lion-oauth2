@@ -15,13 +15,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = {"com.lion.oauth.dao.**"}, repositoryFactoryBeanClass = BaseDaoFactoryBean.class)
 @EntityScan({"com.lion.oauth.entity.**"})
 @EnableJpaAuditing
-public class ApplicationOauthConsoleRestful {
+public class ApplicationOauthServe {
 
     public static void main ( String args[] ) throws Exception {
         /*
          * new SpringApplicationBuilder(Application.class)
          * .web(WebApplicationType.NONE) .run(args);
          */
-        SpringApplication.run(ApplicationOauthConsoleRestful.class, args);
+        SpringApplication.run(ApplicationOauthServe.class, args);
     }
 }
