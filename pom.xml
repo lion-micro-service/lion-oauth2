@@ -19,11 +19,11 @@
         <java.version>${jdk.version}</java.version>
     </properties>
     <modules>
-        <module>lion-oauth2-authorization-server</module>
-        <module>lion-oauth2-resource-server</module>
-        <module>lion-oauth2-entity</module>
+        <module>lion-oauth2-common</module>
         <module>lion-oauth2-business</module>
-        <module>lion-oauth2-console-restful</module>
+        <module>lion-oauth2-authorization-serve</module>
+        <module>lion-oauth2-resource-config</module>
+        <module>lion-oauth2-serve</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -34,17 +34,12 @@
             </dependency>
             <dependency>
                 <groupId>com.lion</groupId>
-                <artifactId>lion-expose-run-starter</artifactId>
+                <artifactId>lion-interface-expose-starter</artifactId>
                 <version>${starter.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.lion</groupId>
-                <artifactId>lion-expose-starter</artifactId>
-                <version>${starter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.lion</groupId>
-                <artifactId>lion-restful-starter</artifactId>
+                <artifactId>lion-serve-starter</artifactId>
                 <version>${starter.version}</version>
             </dependency>
         </dependencies>

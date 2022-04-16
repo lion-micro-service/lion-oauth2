@@ -7,7 +7,9 @@ import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
 import com.lion.exception.BusinessException;
+import com.lion.oauth.dto.CuOauthClientDetailsDto;
 import com.lion.oauth.entity.OauthClientDetails;
+import com.lion.oauth.mapper.OauthClientDetailsMapper;
 import com.lion.oauth.service.OauthClientDetailsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,7 +59,8 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
     @ApiOperation(value = "添加客户端",notes = "添加客户端")
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_ADD')")
-    public IResultData add(@RequestBody @Validated({Validator.Insert.class}) OauthClientDetails oauthClientDetails){
+    public IResultData add(@RequestBody @Validated({Validator.Insert.class}) CuOauthClientDetailsDto cuOauthClientDetailsDto){
+        OauthClientDetails oauthClientDetails = OauthClientDetailsMapper.INSTANCE.CuOauthClientDetailsDtoToOauthClientDetails(cuOauthClientDetailsDto);
         if (oauthClientDetailsService.checkClientIdIsExist(oauthClientDetails.getClientId())){
             new BusinessException("该客户端id已存在");
         }
@@ -69,7 +72,8 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
     @ApiOperation(value = "修改客户端",notes = "修改客户端")
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_UPDATE')")
-    public IResultData update(@RequestBody @Validated({Validator.Update.class}) OauthClientDetails oauthClientDetails){
+    public IResultData update(@RequestBody @Validated({Validator.Update.class}) CuOauthClientDetailsDto cuOauthClientDetailsDto){
+        OauthClientDetails oauthClientDetails = OauthClientDetailsMapper.INSTANCE.CuOauthClientDetailsDtoToOauthClientDetails(cuOauthClientDetailsDto);
         if (oauthClientDetailsService.checkClientIdIsExist(oauthClientDetails.getClientId(),oauthClientDetails.getId())){
             new BusinessException("该客户端id已存在");
         }

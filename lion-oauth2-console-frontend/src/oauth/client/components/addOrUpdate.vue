@@ -91,7 +91,7 @@
           if (!value || value.trim() === ''){
             promise = Promise.reject("请输入编码")
           }else if (value && value.trim() !== ''){
-            await axios.get("/lion-oauth2-console-restful/client/console/check/clientId/exist",{params:{"clientId":_this.addOrUpdateModel.clientId,"id":_this.addOrUpdateModel.id}})
+            await axios.get("/lion-oauth2-serve/client/check/clientId/exist",{params:{"clientId":_this.addOrUpdateModel.clientId,"id":_this.addOrUpdateModel.id}})
               .then((data)=> {
                 if (Object(data).status !== 200){
                   promise = Promise.reject("异常错误！请检查")
@@ -118,7 +118,7 @@
             this.addOrUpdateModel.authorizedGrantTypes=this.addOrUpdateModel.grantTypes.join(",");
             this.addOrUpdateModel.scope=this.addOrUpdateModel.scopes.join(",");
             if (this.addOrUpdateModel.id){
-              axios.put("/lion-oauth2-console-restful/client/console/update",this.addOrUpdateModel)
+              axios.put("/lion-oauth2-serve/client/update",this.addOrUpdateModel)
                   .then((data) =>{
                     if (Object(data).status === 200){
                       message.success(Object(data).message);
@@ -128,7 +128,7 @@
               }).finally(()=>{
               })
             }else {
-              axios.post("/lion-oauth2-console-restful/client/console/add",this.addOrUpdateModel)
+              axios.post("/lion-oauth2-serve/client/add",this.addOrUpdateModel)
                   .then((data) =>{
                     if (Object(data).status === 200){
                       message.success(Object(data).message);
@@ -148,7 +148,7 @@
          * @param id
          */
         private async getDetails(id:string){
-            await axios.get("/lion-oauth2-console-restful/client/console/details",{params:{"id":id}})
+            await axios.get("/lion-oauth2-serve/client/details",{params:{"id":id}})
             .then((data)=>{
                 if (Object(data).status === 200 && data.data){
                     this.addOrUpdateModel=data.data;
@@ -166,7 +166,7 @@
          * 获取权限下拉框数据源
          */
         private async getSelectDate(){
-            await axios.get("/lion-common-console-restful/enum/console/to/select", {params: {"enumClass": "com.lion.resource.enums.Scope"}})
+            await axios.get("/lion-common-console-restful/enum/to/select", {params: {"enumClass": "com.lion.resource.enums.Scope"}})
             .then((data) => {
                 this.selectScopes = data.data;
             })
@@ -174,7 +174,7 @@
             })
             .finally(() => {
             });
-            await axios.get("/lion-common-console-restful/enum/console/to/select", {params: {"enumClass": "com.lion.resource.enums.GrantTypes"}})
+            await axios.get("/lion-common-console-restful/enum/to/select", {params: {"enumClass": "com.lion.resource.enums.GrantTypes"}})
             .then((data) => {
                 this.authorizedGrantTypes = data.data;
             })

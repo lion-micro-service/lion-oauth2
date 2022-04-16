@@ -129,7 +129,7 @@
                 return;
             }
             this.loading=true;
-            axios.get("/lion-oauth2-console-restful/client/console/list",{params:this.searchModel})
+            axios.get("/lion-oauth2-serve/client/list",{params:this.searchModel})
                 .then((data)=>{
                     this.listData=data.data;
                     this.paginationProps.total=Number((Object(data)).totalElements);
@@ -202,7 +202,7 @@
          * @param id
          */
         private delete(id:any):void{
-            axios.delete("/lion-oauth2-console-restful/client/console/delete",{params:{id:id},
+            axios.delete("/lion-oauth2-serve/client/delete",{params:{id:id},
                 paramsSerializer: params => {
                     return qs.stringify(params, { indices: false })
                 }})
