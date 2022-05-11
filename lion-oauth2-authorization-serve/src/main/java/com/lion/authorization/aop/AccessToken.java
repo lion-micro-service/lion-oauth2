@@ -2,6 +2,7 @@ package com.lion.authorization.aop;
 
 import com.lion.aop.exception.ExceptionData;
 import com.lion.core.ResultData;
+import com.lion.core.common.enums.ResultDataState;
 import com.lion.exception.BusinessException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -42,10 +43,8 @@ public class AccessToken {
             validateCaptcha();
             proceed = pjp.proceed();
         }catch (Throwable e){
-            resultData = ExceptionData.instance(e);
-            if (!StringUtils.hasText(resultData.getMessage())){
-                resultData.setMessage("用户名/密码错误");
-            }
+            resultData.setMessage(e.getMessage());
+            resultData.setStatus(ResultDataState.ERROR.getKey());
         }
         if (Objects.nonNull(proceed) && proceed instanceof ResponseEntity) {
             ResponseEntity<OAuth2AccessToken> responseEntity = (ResponseEntity<OAuth2AccessToken>)proceed;
