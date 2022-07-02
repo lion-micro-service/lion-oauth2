@@ -44,10 +44,10 @@ public class AuthorizationIgnoreConfiguration implements InitializingBean {
         Map<RequestMappingInfo, HandlerMethod> map = mapping.getHandlerMethods();
         map.keySet().forEach(mappingInfo -> {
             HandlerMethod handlerMethod = map.get(mappingInfo);
-            AuthorizationIgnore method = AnnotationUtils.findAnnotation(handlerMethod.getMethod(), AuthorizationIgnore.class);
-            Optional.ofNullable(method).ifPresent(authIgnore -> mappingInfo.getPatternsCondition().getPatterns().forEach(url -> authorizationIgnoreProperties.getIgnoreUrl().add(ReUtil.replaceAll(url, PATTERN, ASTERISK))));
-            AuthorizationIgnore controller = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), AuthorizationIgnore.class);
-            Optional.ofNullable(controller).ifPresent(authIgnore -> mappingInfo.getPatternsCondition().getPatterns().forEach(url -> authorizationIgnoreProperties.getIgnoreUrl().add(ReUtil.replaceAll(url, PATTERN, ASTERISK))));
+            AuthorizationIgnore authorizationIgnore = AnnotationUtils.findAnnotation(handlerMethod.getMethod(), AuthorizationIgnore.class);
+            Optional.ofNullable(authorizationIgnore).ifPresent(authIgnore -> mappingInfo.getPatternsCondition().getPatterns().forEach(url -> authorizationIgnoreProperties.getIgnoreUrl().add(ReUtil.replaceAll(url, PATTERN, ASTERISK))));
+            AuthorizationIgnore authorizationIgnoreController = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), AuthorizationIgnore.class);
+            Optional.ofNullable(authorizationIgnoreController).ifPresent(authIgnore -> mappingInfo.getPatternsCondition().getPatterns().forEach(url -> authorizationIgnoreProperties.getIgnoreUrl().add(ReUtil.replaceAll(url, PATTERN, ASTERISK))));
         });
     }
 }
