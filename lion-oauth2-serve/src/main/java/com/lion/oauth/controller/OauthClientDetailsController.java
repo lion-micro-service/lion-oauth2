@@ -4,7 +4,6 @@ import com.lion.constant.SearchConstant;
 import com.lion.core.*;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
-import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
 import com.lion.exception.BusinessException;
 import com.lion.oauth.dto.CuOauthClientDetailsDto;
@@ -15,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,14 +46,8 @@ public class OauthClientDetailsController extends BaseControllerImpl implements 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_OAUTH2_CLIENT_LIST')")
     @ApiOperation(value = "列表",notes = "列表")
-    public IPageResultData<List<OauthClientDetails>> list(LionPage lionPage, String clientId){
-        JpqlParameter jpqlParameter = new JpqlParameter();
-        if (StringUtils.hasText(clientId)){
-            jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_clientId",clientId);
-        }
-        jpqlParameter.setSortParameter("createDateTime", Sort.Direction.DESC);
-        lionPage.setJpqlParameter(jpqlParameter);
-        return (PageResultData) oauthClientDetailsService.findNavigator(lionPage);
+    public IPageResultData<List<OauthClientDetails>> list(PageRequest pageRequest, String clientId){
+        return (PageResultData) oauthClientDetailsService.list(pageRequest,clientId);
     }
 
     @ApiOperation(value = "添加客户端",notes = "添加客户端")

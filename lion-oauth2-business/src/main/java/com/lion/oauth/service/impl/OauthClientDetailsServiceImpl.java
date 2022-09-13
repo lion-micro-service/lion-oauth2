@@ -5,6 +5,8 @@ import com.lion.oauth.dao.OauthClientDetailsDao;
 import com.lion.oauth.entity.OauthClientDetails;
 import com.lion.oauth.service.OauthClientDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -37,5 +39,10 @@ public class OauthClientDetailsServiceImpl extends BaseServiceImpl<OauthClientDe
     @Override
     public Boolean checkClientIdIsExist(String clientId) {
         return checkClientIdIsExist(clientId, null);
+    }
+
+    @Override
+    public Page<OauthClientDetails> list(PageRequest pageRequest, String clientId) {
+        return oauthClientDetailsDao.findByClientId(clientId,pageRequest);
     }
 }

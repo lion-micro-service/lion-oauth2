@@ -2,6 +2,8 @@ package com.lion.oauth.dao;
 
 import com.lion.core.persistence.curd.BaseDao;
 import com.lion.oauth.entity.OauthClientDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Optional;
 
@@ -18,5 +20,7 @@ public interface OauthClientDetailsDao extends BaseDao<OauthClientDetails> {
      * @return
      */
     public Optional<OauthClientDetails> findFirstByClientId(String clientId);
+
+    public Page<OauthClientDetails> findByClientId(String clientId,PageRequest pageRequest);
 
 }

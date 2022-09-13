@@ -2,6 +2,8 @@ package com.lion.oauth.service;
 
 import com.lion.core.service.BaseService;
 import com.lion.oauth.entity.OauthClientDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 /**
  * @description: OauthClientDetailsService
@@ -24,4 +26,6 @@ public interface OauthClientDetailsService extends BaseService<OauthClientDetail
      * @return
      */
     public Boolean checkClientIdIsExist(String clientId);
+
+    public Page<OauthClientDetails> list(PageRequest pageRequest, String clientId);
 }
