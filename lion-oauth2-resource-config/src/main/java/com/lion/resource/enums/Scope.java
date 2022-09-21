@@ -26,6 +26,12 @@ public enum Scope implements IEnum {
         this.desc = desc;
     }
 
+
+    @Override
+    public String code() {
+        return "oauth2Scope";
+    }
+
     @Override
     public Integer getKey() {
         return key;

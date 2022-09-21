@@ -26,6 +26,11 @@ public enum GrantTypes implements IEnum {
     }
 
     @Override
+    public String code() {
+        return "oauth2GrantTypes";
+    }
+
+    @Override
     public Integer getKey() {
         return key;
     }
@@ -77,4 +82,6 @@ public enum GrantTypes implements IEnum {
         }
         return null;
     }
+
+
 }
