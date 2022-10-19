@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import javax.annotation.Resource;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -45,9 +46,21 @@ public class AuthorizationIgnoreConfiguration implements InitializingBean {
         map.keySet().forEach(mappingInfo -> {
             HandlerMethod handlerMethod = map.get(mappingInfo);
             AuthorizationIgnore authorizationIgnore = AnnotationUtils.findAnnotation(handlerMethod.getMethod(), AuthorizationIgnore.class);
-            Optional.ofNullable(authorizationIgnore).ifPresent(authIgnore -> mappingInfo.getPathPatternsCondition().getPatterns().forEach(url ->{ authorizationIgnoreProperties.getIgnoreUrl().add(ReUtil.replaceAll(url.getPatternString(), PATTERN, ASTERISK));}));
+            Optional.ofNullable(authorizationIgnore).ifPresent(authIgnore -> {
+                authorizationIgnore(mappingInfo);
+            });
             AuthorizationIgnore authorizationIgnoreController = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), AuthorizationIgnore.class);
-            Optional.ofNullable(authorizationIgnoreController).ifPresent(authIgnore -> mappingInfo.getPathPatternsCondition().getPatterns().forEach(url -> authorizationIgnoreProperties.getIgnoreUrl().add(ReUtil.replaceAll(url.getPatternString(), PATTERN, ASTERISK))));
+            Optional.ofNullable(authorizationIgnoreController).ifPresent(authIgnore -> {
+                authorizationIgnore(mappingInfo);
+            });
         });
+    }
+
+    private void authorizationIgnore(RequestMappingInfo mappingInfo){
+        if (Objects.nonNull(mappingInfo.getPatternsCondition())) {
+            mappingInfo.getPatternsCondition().getPatterns().forEach(url ->{ authorizationIgnoreProperties.getIgnoreUrl().add(ReUtil.replaceAll(url, PATTERN, ASTERISK));});
+        }else {
+            mappingInfo.getPathPatternsCondition().getPatterns().forEach(url ->{ authorizationIgnoreProperties.getIgnoreUrl().add(ReUtil.replaceAll(url.getPatternString(), PATTERN, ASTERISK));});
+        }
     }
 }
