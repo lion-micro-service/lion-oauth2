@@ -24,6 +24,7 @@
         <module>lion-oauth2-authorization-serve</module>
         <module>lion-oauth2-resource-config</module>
         <module>lion-oauth2-serve</module>
+        <module>lion-oauth2-interface-expose</module>
     </modules>
     <dependencyManagement>
         <dependencies>

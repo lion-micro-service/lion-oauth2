@@ -97,6 +97,11 @@
         </dependency>
         <dependency>
             <groupId>com.lion</groupId>
+            <artifactId>lion-oauth2-interface-expose</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lion</groupId>
             <artifactId>lion-interface-expose-starter</artifactId>
             <version>${lion-interface-expose-starter.version}</version>
         </dependency>

@@ -1,6 +1,8 @@
 package com.lion.authorization.configuration;
 
 import com.lion.authorization.handler.LionLogoutHandler;
+import com.lion.authorization.wx.WechatAuthenticationProvider;
+import com.lion.common.expose.oauth2.WxUserDetailsService;
 import com.lion.config.PasswordConfiguration;
 import com.lion.constant.DubboConstant;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -8,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,6 +37,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @DubboReference(cluster= DubboConstant.CLUSTER_FAILOVER,retries = 3)
     private UserDetailsService userDetailsService;
 
+//    @DubboReference(cluster= DubboConstant.CLUSTER_FAILOVER,retries = 3)
+    @DubboReference
+    private WxUserDetailsService wxUserDetailsService;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -53,7 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure ( AuthenticationManagerBuilder auth ) throws Exception {
-        auth.userDetailsService(userDetailsService)
+        auth.authenticationProvider(wechatAuthenticationProvider())
+            .userDetailsService(userDetailsService)
             .passwordEncoder(passwordEncoder);
     }
 
@@ -83,6 +89,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
             .and()
                 .csrf().disable();
+    }
+
+    @Bean
+    public WechatAuthenticationProvider wechatAuthenticationProvider() {
+        WechatAuthenticationProvider provider = new WechatAuthenticationProvider();
+        provider.setUserDetailsService(wxUserDetailsService);
+        return provider;
     }
 
 }
