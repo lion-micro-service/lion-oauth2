@@ -34,11 +34,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private TokenStore tokenStore;
 
-    @DubboReference(cluster= DubboConstant.CLUSTER_FAILOVER,retries = 3)
+    @DubboReference()
     private UserDetailsService userDetailsService;
 
-//    @DubboReference(cluster= DubboConstant.CLUSTER_FAILOVER,retries = 3)
-    @DubboReference
+    @DubboReference()
     private WxUserDetailsService wxUserDetailsService;
 
     @Autowired
