@@ -1,10 +1,11 @@
 package com.lion.authorization.configuration;
 
-import com.lion.authorization.LionTokenServices;
+import com.lion.authorization.LionTokenService;
 import com.lion.authorization.handler.LionTokenEnhancer;
 import com.lion.authorization.handler.LionWebResponseExceptionTranslator;
 import com.lion.authorization.wx.WechatTokenGranter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +17,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
-import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import javax.sql.DataSource;
@@ -46,7 +46,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private TokenStore tokenStore;
 
     @Autowired
-    private LionTokenServices tokenServices;
+    private LionTokenService tokenServices;
 
     @Autowired
     private DataSource dataSource;

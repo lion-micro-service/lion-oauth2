@@ -1,6 +1,6 @@
 package com.lion.authorization.aop;
 
-import com.lion.authorization.LionTokenServices;
+import com.lion.authorization.LionTokenService;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -8,7 +8,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -36,7 +35,7 @@ public class CheckToken {
     private TokenStore tokenStore;
 
     @Resource
-    private LionTokenServices tokenServices;
+    private LionTokenService tokenServices;
 
     @Autowired
     private StringRedisTemplate redisTemplate;

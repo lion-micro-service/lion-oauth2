@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @description: 用户信息增强
@@ -20,9 +21,7 @@ public class LionTokenEnhancer implements TokenEnhancer {
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         LionUserDetails user = (LionUserDetails) authentication.getPrincipal();
-        final Map<String, Object> additionalInfo = new HashMap<>();
-//        additionalInfo.put("userId",user.getUserId());
-        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
+        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(user.getExtended());
         return accessToken;
     }
 }
