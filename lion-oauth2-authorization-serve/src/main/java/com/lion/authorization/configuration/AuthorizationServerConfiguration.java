@@ -5,7 +5,6 @@ import com.lion.authorization.handler.LionTokenEnhancer;
 import com.lion.authorization.handler.LionWebResponseExceptionTranslator;
 import com.lion.authorization.wx.WechatTokenGranter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,10 +16,13 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,8 +47,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     private TokenStore tokenStore;
 
-    @Autowired
-    private LionTokenService tokenServices;
+//    @Autowired
+//    private DefaultTokenServices tokenServices;
 
     @Autowired
     private DataSource dataSource;
@@ -66,12 +68,14 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 //                .tokenEnhancer(tokenEnhancer)
 //                .allowedTokenEndpointRequestMethods(HttpMethod.POST);
         List<TokenGranter> tokenGranters = new ArrayList<>(Collections.singletonList(endpoints.getTokenGranter()));
-        tokenGranters.add(new WechatTokenGranter(tokenServices,endpoints.getClientDetailsService(),endpoints.getOAuth2RequestFactory(),authenticationManager));
+        tokenGranters.add(new WechatTokenGranter(endpoints.getTokenServices(),endpoints.getClientDetailsService(),endpoints.getOAuth2RequestFactory(),authenticationManager));
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer));
         endpoints.authenticationManager(authenticationManager)
+                .tokenEnhancer(tokenEnhancerChain)
                 .tokenStore(tokenStore)
-                .tokenServices(tokenServices)
+//                .tokenServices(tokenServices)
                 .tokenGranter(new CompositeTokenGranter(tokenGranters))
-                .tokenEnhancer(tokenEnhancer)
                 .exceptionTranslator(webResponseExceptionTranslator)
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
     }

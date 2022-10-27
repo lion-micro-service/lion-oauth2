@@ -17,7 +17,7 @@ import javax.sql.DataSource;
  * @author: Mr.Liu
  * @create: 2020-02-19 15:36
  */
-@Component
+//@Component
 public class LionTokenService extends DefaultTokenServices  {
 
     @Autowired

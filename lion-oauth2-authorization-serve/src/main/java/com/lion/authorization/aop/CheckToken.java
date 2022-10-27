@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit;
  * @author: Mr.Liu
  * @create: 2020-02-03 19:45
  */
-@Component
-@Aspect
+//@Component
+//@Aspect
 public class CheckToken {
 
     private static final String TOKEN_VALIDITY = "token_validity:";
