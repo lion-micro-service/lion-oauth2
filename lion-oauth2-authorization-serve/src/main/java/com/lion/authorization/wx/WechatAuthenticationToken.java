@@ -14,6 +14,19 @@ public class WechatAuthenticationToken extends AbstractAuthenticationToken {
     private String encryptedData;
     @Getter
     private String iv;
+
+    /**
+     * 昵称
+     */
+    @Getter
+    private String nickName;
+
+    /**
+     * 头像
+     */
+    @Getter
+    private String avatarUrl;
+
     /**
      * 账号校验之前的token构建
      *
