@@ -36,12 +36,15 @@ public class WechatTokenGranter extends AbstractTokenGranter {
         String code = parameters.get("code");
         String encryptedData = parameters.get("encryptedData");
         String iv = parameters.get("iv");
-
+        String nickName = parameters.get("nickName");
+        String avatarUrl = parameters.get("avatarUrl");
         parameters.remove("code");
         parameters.remove("encryptedData");
         parameters.remove("iv");
+        parameters.remove("nickName");
+        parameters.remove("avatarUrl");
 
-        Authentication userAuth = new WechatAuthenticationToken(code, encryptedData,iv); // 未认证状态
+        Authentication userAuth = new WechatAuthenticationToken(code, encryptedData,iv,nickName,avatarUrl); // 未认证状态
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
 
         try {

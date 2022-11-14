@@ -32,11 +32,13 @@ public class WechatAuthenticationToken extends AbstractAuthenticationToken {
      *
      * @param principal
      */
-    public WechatAuthenticationToken(Object principal, String encryptedData,String iv) {
+    public WechatAuthenticationToken(Object principal, String encryptedData,String iv,String nickName,String avatarUrl) {
         super(null);
         this.principal = principal;
         this.encryptedData = encryptedData;
         this.iv=iv;
+        this.nickName = nickName;
+        this.avatarUrl = avatarUrl;
         setAuthenticated(false);
     }
 
