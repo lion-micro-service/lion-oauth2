@@ -31,7 +31,8 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         String iv = authenticationToken.getIv();
         String nickName = authenticationToken.getNickName();
         String avatarUrl = authenticationToken.getAvatarUrl();
-        UserDetails userDetails = userDetailsService.loadByCode(code,encryptedData ,iv ,nickName,avatarUrl);
+        String phone = authenticationToken.getPhone();
+        UserDetails userDetails = userDetailsService.loadByCode(code,encryptedData ,iv ,nickName,avatarUrl,phone);
         WechatAuthenticationToken result = new WechatAuthenticationToken(userDetails, new HashSet<>());
         result.setDetails(authentication.getDetails());
         return result;

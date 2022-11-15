@@ -38,13 +38,15 @@ public class WechatTokenGranter extends AbstractTokenGranter {
         String iv = parameters.get("iv");
         String nickName = parameters.get("nickName");
         String avatarUrl = parameters.get("avatarUrl");
+        String phone = parameters.get("phone");
         parameters.remove("code");
         parameters.remove("encryptedData");
         parameters.remove("iv");
         parameters.remove("nickName");
         parameters.remove("avatarUrl");
+        parameters.remove("phone");
 
-        Authentication userAuth = new WechatAuthenticationToken(code, encryptedData,iv,nickName,avatarUrl); // 未认证状态
+        Authentication userAuth = new WechatAuthenticationToken(code, encryptedData,iv,nickName,avatarUrl,phone); // 未认证状态
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
 
         try {
