@@ -1,5 +1,6 @@
 package com.lion.authorization.configuration;
 
+import com.lion.authorization.LionRedisTokenStore;
 import com.lion.authorization.LionTokenService;
 import com.lion.authorization.handler.LionTokenEnhancer;
 import com.lion.authorization.handler.LionWebResponseExceptionTranslator;
@@ -45,10 +46,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private LionWebResponseExceptionTranslator webResponseExceptionTranslator;
 
     @Autowired
-    private TokenStore tokenStore;
+    private LionRedisTokenStore tokenStore;
 
-//    @Autowired
-//    private DefaultTokenServices tokenServices;
+    @Autowired
+    private LionTokenService tokenServices;
 
     @Autowired
     private DataSource dataSource;
@@ -74,7 +75,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         endpoints.authenticationManager(authenticationManager)
                 .tokenEnhancer(tokenEnhancerChain)
                 .tokenStore(tokenStore)
-//                .tokenServices(tokenServices)
+                .tokenServices(tokenServices)
                 .tokenGranter(new CompositeTokenGranter(tokenGranters))
                 .exceptionTranslator(webResponseExceptionTranslator)
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
