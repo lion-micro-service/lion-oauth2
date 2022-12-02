@@ -2,7 +2,6 @@ package com.lion.authorization;
 
 import com.lion.authorization.handler.LionTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -12,10 +11,8 @@ import org.springframework.security.oauth2.provider.client.JdbcClientDetailsServ
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Objects;
 
@@ -25,7 +22,7 @@ import java.util.Objects;
  * @create: 2020-02-19 15:36
  */
 @Component
-public class LionTokenServices extends DefaultTokenServices  {
+public class LionTokenService extends DefaultTokenServices  {
 
     @Autowired
     private TokenStore tokenStore;
@@ -46,14 +43,14 @@ public class LionTokenServices extends DefaultTokenServices  {
         super.setClientDetailsService(new JdbcClientDetailsService(dataSource));
     }
 
-//    @Override
-//    public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
-//        OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);
-//        if (Objects.nonNull(existingAccessToken)){
-//            tokenStore.removeAccessToken(existingAccessToken);
-//        }
-//        return super.createAccessToken(authentication);
-//    }
+    @Override
+    public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
+        OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);
+        if (Objects.nonNull(existingAccessToken)){
+            tokenStore.removeAccessToken(existingAccessToken);
+        }
+        return super.createAccessToken(authentication);
+    }
 
     /**
      * 获取token有效期

@@ -1,26 +1,31 @@
 package com.lion.authorization.configuration;
 
-import com.lion.authorization.LionTokenServices;
+import com.lion.authorization.LionRedisTokenStore;
+import com.lion.authorization.LionTokenService;
 import com.lion.authorization.handler.LionTokenEnhancer;
 import com.lion.authorization.handler.LionWebResponseExceptionTranslator;
+import com.lion.authorization.wx.WechatTokenGranter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
+import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
-import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @description: 授权验证配置
@@ -41,10 +46,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private LionWebResponseExceptionTranslator webResponseExceptionTranslator;
 
     @Autowired
-    private TokenStore tokenStore;
+    private LionRedisTokenStore tokenStore;
 
     @Autowired
-    private LionTokenServices tokenServices;
+    private LionTokenService tokenServices;
 
     @Autowired
     private DataSource dataSource;
@@ -56,12 +61,23 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager)//密码模式
-                .tokenStore(tokenStore)//redi存储token
+//        endpoints.authenticationManager(authenticationManager)
+//                .tokenStore(tokenStore)//redis存储token
+//                .tokenServices(tokenServices)
+//                .authorizationCodeServices(new InMemoryAuthorizationCodeServices())//授权码模式
+//                .exceptionTranslator(webResponseExceptionTranslator)
+//                .tokenEnhancer(tokenEnhancer)
+//                .allowedTokenEndpointRequestMethods(HttpMethod.POST);
+        List<TokenGranter> tokenGranters = new ArrayList<>(Collections.singletonList(endpoints.getTokenGranter()));
+        tokenGranters.add(new WechatTokenGranter(endpoints.getTokenServices(),endpoints.getClientDetailsService(),endpoints.getOAuth2RequestFactory(),authenticationManager));
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer));
+        endpoints.authenticationManager(authenticationManager)
+                .tokenEnhancer(tokenEnhancerChain)
+                .tokenStore(tokenStore)
                 .tokenServices(tokenServices)
-                .authorizationCodeServices(new InMemoryAuthorizationCodeServices())//授权码模式
+                .tokenGranter(new CompositeTokenGranter(tokenGranters))
                 .exceptionTranslator(webResponseExceptionTranslator)
-                .tokenEnhancer(tokenEnhancer)
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
     }
 
