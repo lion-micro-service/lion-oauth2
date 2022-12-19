@@ -1,18 +1,15 @@
 package com.lion.authorization.aop;
 
-import com.lion.authorization.LionTokenServices;
+import com.lion.authorization.LionTokenService;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -26,8 +23,8 @@ import java.util.concurrent.TimeUnit;
  * @author: Mr.Liu
  * @create: 2020-02-03 19:45
  */
-@Component
-@Aspect
+//@Component
+//@Aspect
 public class CheckToken {
 
     private static final String TOKEN_VALIDITY = "token_validity:";
@@ -36,7 +33,7 @@ public class CheckToken {
     private TokenStore tokenStore;
 
     @Resource
-    private LionTokenServices tokenServices;
+    private LionTokenService tokenService;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
@@ -62,7 +59,7 @@ public class CheckToken {
      * @param token
      */
     private void renewalTokenValidity(String token){
-        DefaultOAuth2AccessToken accessToken = (DefaultOAuth2AccessToken) tokenServices.readAccessToken(token);
+        DefaultOAuth2AccessToken accessToken = (DefaultOAuth2AccessToken) tokenService.readAccessToken(token);
         if(Objects.isNull(accessToken) || accessToken.isExpired()){
             return;
         }
@@ -81,7 +78,7 @@ public class CheckToken {
     private long getTokenValidity(String clientId, OAuth2Request oauth2Request){
         String validity =redisTemplate.opsForValue().get(TOKEN_VALIDITY+clientId);
         if (!StringUtils.hasText(validity) || !NumberUtils.isDigits(validity)){
-            validity = String.valueOf(tokenServices.getTokenValiditySeconds(oauth2Request));
+            validity = String.valueOf(tokenService.getTokenValiditySeconds(oauth2Request));
             redisTemplate.opsForValue().set(TOKEN_VALIDITY+clientId,validity,60, TimeUnit.SECONDS);
 //            redisTemplate.opsForValue().increment(TOKEN_VALIDITY+clientId,60*1000);
         }
