@@ -3,11 +3,14 @@ package com.lion.authorization.configuration;
 import com.lion.authorization.LionTokenServices;
 import com.lion.authorization.handler.LionTokenEnhancer;
 import com.lion.authorization.handler.LionWebResponseExceptionTranslator;
+import com.lion.constant.DubboConstant;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -17,7 +20,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.*;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -46,6 +49,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     private LionTokenServices tokenServices;
 
+    @DubboReference(cluster= DubboConstant.CLUSTER_FAILOVER,retries = 3)
+    private UserDetailsService userDetailsService;
+
     @Autowired
     private DataSource dataSource;
 
@@ -62,7 +68,14 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .authorizationCodeServices(new InMemoryAuthorizationCodeServices())//授权码模式
                 .exceptionTranslator(webResponseExceptionTranslator)
                 .tokenEnhancer(tokenEnhancer)
+                .reuseRefreshTokens(true)
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
+
+//        DefaultAccessTokenConverter accessTokenConverter =((DefaultAccessTokenConverter)endpoints.getAccessTokenConverter());
+//        DefaultUserAuthenticationConverter userTokenConverter = new DefaultUserAuthenticationConverter();
+//        userTokenConverter.setUserDetailsService(userDetailsService);
+//        accessTokenConverter.setUserTokenConverter(userTokenConverter);
+//        endpoints.accessTokenConverter(accessTokenConverter);
     }
 
     /**
